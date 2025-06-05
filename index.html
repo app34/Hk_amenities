@@ -1,0 +1,1954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OBLU SELECT Sangeli - Housekeeping Amenities</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0a0a0a;
+            color: #00cc00;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(45deg, #1a1a1a, #004400);
+            border-bottom: 2px solid #00cc00;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #00cc00;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: #cccccc;
+            margin-bottom: 15px;
+        }
+
+        /* Theme Selector */
+        .theme-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .theme-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .theme-btn.green { background: #00cc00; }
+        .theme-btn.blue { background: #0066ff; }
+        .theme-btn.purple { background: #cc00cc; }
+        .theme-btn.orange { background: #ff6600; }
+        .theme-btn.active { border-color: #ffffff; transform: scale(1.2); }
+
+        /* Container */
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Villa Selection */
+        .villa-section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-align: center;
+            color: #00cc00;
+        }
+
+        .villa-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .villa-btn {
+            background: rgba(0, 0, 0, 0.8);
+            color: #00cc00;
+            border: 2px solid #00cc00;
+            padding: 16px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 13px;
+            text-align: center;
+            min-height: 60px;
+        }
+
+        .villa-btn:hover {
+            background: rgba(0, 204, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0, 204, 0, 0.5);
+        }
+
+        .villa-btn.selected {
+            background: rgba(0, 204, 0, 0.3);
+            box-shadow: 0 0 20px rgba(0, 204, 0, 0.8);
+        }
+
+        .selected-villa {
+            text-align: center;
+            color: #00ccff;
+            font-size: 12px;
+            margin-bottom: 15px;
+            min-height: 20px;
+        }
+
+        /* Selected Items Display */
+        .selected-items {
+            margin-bottom: 20px;
+        }
+
+        .selected-textarea {
+            width: 100%;
+            height: 120px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00cc00;
+            border: 2px solid #00cc00;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 12px;
+            resize: vertical;
+            font-family: Arial, sans-serif;
+        }
+
+        .selected-textarea::placeholder {
+            color: #666666;
+        }
+
+        /* Search and Filter Section */
+        .search-filter-section {
+            margin-bottom: 20px;
+            background: rgba(0, 20, 0, 0.3);
+            border: 1px solid #00cc00;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00cc00;
+            border: 2px solid #00cc00;
+            border-radius: 6px;
+            padding: 12px 40px 12px 12px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            box-shadow: 0 0 15px rgba(0, 204, 0, 0.5);
+            border-color: #00ff00;
+        }
+
+        .search-input::placeholder {
+            color: #666666;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #00cc00;
+            cursor: pointer;
+            font-size: 18px;
+            width: 30px;
+            height: 30px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .search-clear:hover {
+            background: rgba(0, 204, 0, 0.2);
+        }
+
+        .search-clear.show {
+            display: flex;
+        }
+
+        .filter-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .filter-btn {
+            background: rgba(0, 0, 0, 0.8);
+            color: #00cc00;
+            border: 1px solid #00cc00;
+            padding: 8px 12px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        .filter-btn:hover {
+            background: rgba(0, 204, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 204, 0, 0.3);
+        }
+
+        .filter-btn.active {
+            background: rgba(0, 204, 0, 0.3);
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 204, 0, 0.6);
+        }
+
+        .search-stats {
+            font-size: 12px;
+            color: #888888;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .search-stats.highlight {
+            color: #00cc00;
+            font-weight: bold;
+        }
+
+        /* Amenities Grid */
+        .amenities-section {
+            margin-bottom: 20px;
+        }
+
+        .amenities-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        /* Search highlighting */
+        .amenity-btn.highlight {
+            background: rgba(255, 255, 0, 0.2);
+            border-color: #ffff00;
+            animation: searchHighlight 1.5s ease-in-out;
+        }
+
+        @keyframes searchHighlight {
+            0% { background: rgba(255, 255, 0, 0.4); }
+            50% { background: rgba(255, 255, 0, 0.2); }
+            100% { background: rgba(255, 255, 0, 0.1); }
+        }
+
+        .amenity-btn.hidden {
+            display: none;
+        }
+
+        .category-header.hidden {
+            display: none;
+        }
+
+        .no-results {
+            grid-column: span 3;
+            text-align: center;
+            color: #888888;
+            padding: 40px 20px;
+            font-style: italic;
+        }
+
+        .category-header {
+            grid-column: span 3;
+            background: rgba(0, 204, 0, 0.2);
+            color: #00cc00;
+            padding: 8px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 13px;
+            border-radius: 5px;
+            margin: 10px 0 5px 0;
+        }
+
+        .amenity-btn {
+            background: rgba(0, 0, 0, 0.8);
+            color: #00cc00;
+            border: 1px solid #00cc00;
+            padding: 16px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            text-align: center;
+            line-height: 1.3;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .amenity-btn:hover {
+            background: rgba(0, 204, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 204, 0, 0.3);
+        }
+
+        .amenity-btn.selected {
+            background: rgba(0, 204, 0, 0.3);
+            border-color: #00cc00;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(0, 204, 0, 0.6);
+        }
+
+        /* Floating Action Buttons */
+        .floating-buttons {
+            position: fixed;
+            bottom: 20px;
+            z-index: 1000;
+            display: none;
+        }
+
+        .floating-buttons.show {
+            display: block;
+        }
+
+        .floating-copy {
+            left: 20px;
+        }
+
+        .floating-whatsapp {
+            right: 20px;
+        }
+
+        .floating-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0, 204, 0, 0.9);
+            color: #ffffff;
+            border: 2px solid #00cc00;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 204, 0, 0.4);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .floating-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 25px rgba(0, 204, 0, 0.6);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 4px 20px rgba(0, 204, 0, 0.4); }
+            50% { box-shadow: 0 4px 30px rgba(0, 204, 0, 0.7); }
+            100% { box-shadow: 0 4px 20px rgba(0, 204, 0, 0.4); }
+        }
+
+        /* Action Buttons */
+        .share-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .copy-btn, .whatsapp-btn, .clear-btn {
+            background: rgba(0, 0, 0, 0.8);
+            color: #00cc00;
+            border: 2px solid #00cc00;
+            padding: 18px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: bold;
+            min-height: 55px;
+        }
+
+        .copy-btn:hover, .whatsapp-btn:hover {
+            background: rgba(0, 204, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 204, 0, 0.5);
+        }
+
+        .clear-btn {
+            color: #ff6666;
+            border-color: #ff6666;
+        }
+
+        .clear-btn:hover {
+            background: rgba(255, 102, 102, 0.1);
+            box-shadow: 0 0 15px rgba(255, 102, 102, 0.5);
+        }
+
+        /* Admin Panel */
+        .admin-panel {
+            background: rgba(0, 20, 0, 0.95);
+            border: 2px solid #00ff00;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+
+        .admin-toggle {
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            border: 2px solid #00ff00;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            width: 100%;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-toggle:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+        }
+
+        .admin-password, .admin-content {
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .admin-password.show, .admin-content.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .admin-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .admin-btn {
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .admin-btn:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .admin-section {
+            border: 1px solid #555555;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #1a1a1a;
+        }
+
+        .admin-section h4 {
+            color: #cccccc;
+            font-size: 14px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #444444;
+            padding-bottom: 5px;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            margin: 5px 0;
+            background-color: #222222;
+            border-radius: 3px;
+        }
+
+        .remove-btn {
+            background-color: #660000;
+            color: #ff6666;
+            border: 1px solid #ff6666;
+            padding: 2px 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .remove-btn:hover {
+            background-color: #ff6666;
+            color: #000000;
+        }
+
+        /* Admin Navigation */
+        .admin-nav {
+            display: none;
+            gap: 10px;
+            margin: 15px 0;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 10px;
+        }
+
+        .nav-btn {
+            background: rgba(0, 0, 0, 0.8);
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(0, 255, 0, 0.1);
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+        }
+
+        .nav-btn.active {
+            background: rgba(0, 255, 0, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+        }
+
+        /* History Styles */
+        .history-container {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+            background: rgba(0, 0, 0, 0.3);
+            margin-top: 10px;
+        }
+
+        .history-item {
+            border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-header {
+            color: #00ff00;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .history-villa {
+            color: #00ccff;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .history-amenities {
+            color: #cccccc;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .history-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .admin-btn.danger {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: #ff6666;
+            color: #ff6666;
+        }
+
+        .admin-btn.danger:hover {
+            background: rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(255, 102, 102, 0.5);
+        }
+
+        /* Messages */
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .message.show {
+            opacity: 1;
+            top: 30px;
+        }
+
+        .message.success {
+            background-color: #004400;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+
+        .message.error {
+            background-color: #440000;
+            color: #ff6666;
+            border: 1px solid #ff6666;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 480px) {
+            .villa-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .villa-btn {
+                padding: 14px 10px;
+                font-size: 12px;
+                min-height: 55px;
+            }
+
+            .amenities-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
+            }
+
+            .amenity-btn {
+                padding: 14px 8px;
+                font-size: 11px;
+                min-height: 45px;
+            }
+
+            .category-header {
+                grid-column: span 3;
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .copy-btn, .whatsapp-btn, .clear-btn {
+                padding: 16px 12px;
+                font-size: 15px;
+                min-height: 50px;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr;
+            }
+
+            .clear-btn {
+                grid-column: span 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">🏝️ OBLU SELECT Sangeli</div>
+        <div class="subtitle">Housekeeping Amenities Manager</div>
+        
+        <!-- Theme Selector -->
+        <div class="theme-selector">
+            <div class="theme-btn green active" onclick="changeTheme('green')"></div>
+            <div class="theme-btn blue" onclick="changeTheme('blue')"></div>
+            <div class="theme-btn purple" onclick="changeTheme('purple')"></div>
+            <div class="theme-btn orange" onclick="changeTheme('orange')"></div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Villa Selection -->
+        <div class="villa-section">
+            <div class="section-title">🏡 Select Villa & Pantry</div>
+            <div class="villa-grid">
+                <button class="villa-btn" data-villa="water-villa-1st">Water Villa<br>1st Pantry</button>
+                <button class="villa-btn" data-villa="water-villa-2nd">Water Villa<br>2nd Pantry</button>
+                <button class="villa-btn" data-villa="beach-villa-1st">Beach Villa<br>1st Pantry</button>
+                <button class="villa-btn" data-villa="beach-villa-2nd">Beach Villa<br>2nd Pantry</button>
+            </div>
+            <div class="selected-villa" id="selected-villa"></div>
+        </div>
+
+        <!-- Selected Items Display -->
+        <div class="selected-items">
+            <div class="section-title">📝 Selected Items (Double-tap to remove)</div>
+            <textarea class="selected-textarea" id="selected-items" placeholder="Selected amenities will appear here..." readonly></textarea>
+        </div>
+
+        <!-- Search and Filter -->
+        <div class="search-filter-section">
+            <div class="section-title">🔍 Search & Filter Amenities</div>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" id="search-input" placeholder="Search amenities (e.g., towel, coffee, soap...)">
+                <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+            </div>
+            
+            <div class="filter-container" id="filter-container">
+                <button class="filter-btn active" data-category="all" onclick="filterByCategory('all')">All Categories</button>
+                <!-- Category filters will be populated here -->
+            </div>
+            
+            <div class="search-stats" id="search-stats">Showing all amenities</div>
+        </div>
+
+        <!-- Amenities Selection -->
+        <div class="amenities-section">
+            <div class="section-title">🛏️ Select Amenities</div>
+            <div class="amenities-grid" id="amenities-grid">
+                <!-- Amenities will be populated here -->
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="share-buttons">
+            <button class="copy-btn" id="copy-btn">📋 Copy List</button>
+            <button class="whatsapp-btn" id="whatsapp-btn">📱 Share WhatsApp</button>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="clear-btn" id="clear-btn">🗑️ Clear List</button>
+        </div>
+
+        <!-- Admin Panel -->
+        <div class="admin-panel">
+            <button class="admin-toggle" onclick="toggleAdmin()">🔧 Admin Panel - Edit Amenities List</button>
+            
+            <!-- Password Section -->
+            <div class="admin-password" id="admin-password">
+                <input type="password" class="admin-input" id="admin-password-input" placeholder="Enter admin password" onkeypress="handlePasswordKeyPress(event)">
+                <button class="admin-btn" onclick="authenticateAdmin()">🔑 Login</button>
+            </div>
+            
+            <!-- Admin Navigation -->
+            <div class="admin-nav" id="admin-nav">
+                <button onclick="showAdminSection('manage')" class="nav-btn active" id="manage-btn">Manage Amenities</button>
+                <button onclick="showAdminSection('history')" class="nav-btn" id="history-btn">Share History</button>
+            </div>
+            
+            <!-- Admin Content -->
+            <div class="admin-content" id="admin-content">
+                <!-- Manage Amenities Section -->
+                <div id="manage-section" class="admin-tab-content">
+                    <!-- Current Categories View -->
+                    <div class="admin-section">
+                        <h4>Current Categories & Items</h4>
+                        <div id="categories-view"></div>
+                    </div>
+                
+                    <!-- Category Management -->
+                    <div class="admin-section" id="admin-edit-section" style="display: none;">
+                        <h4>Category Management (Admin Only)</h4>
+                        <input type="text" class="admin-input" id="new-category" placeholder="Add new category (e.g., Bathroom Items)">
+                        <button class="admin-btn" onclick="addNewCategory()">➕ Add Category</button>
+                        <div id="category-list"></div>
+                    </div>
+                    
+                    <!-- Item Management -->
+                    <div class="admin-section" id="admin-item-section" style="display: none;">
+                        <h4>Item Management (Admin Only)</h4>
+                        <select class="admin-input" id="category-select">
+                            <option value="">Select category for new item</option>
+                        </select>
+                        
+                        <!-- Single Item Add -->
+                        <input type="text" class="admin-input" id="new-item" placeholder="Add new item to selected category">
+                        <button class="admin-btn" onclick="addItemToCategory()">➕ Add Single Item</button>
+                        
+                        <!-- Bulk Item Add -->
+                        <textarea class="admin-input" id="bulk-items" placeholder="Add multiple items (one per line) to selected category" rows="4" style="margin-top: 10px;"></textarea>
+                        <button class="admin-btn" onclick="addBulkItemsToCategory()" style="background: rgba(0, 150, 0, 0.8); border-color: #00bb00;">➕ Add Multiple Items</button>
+                        
+                        <div id="items-list"></div>
+                    </div>
+                    
+                    <!-- System Functions -->
+                    <div class="admin-section">
+                        <h4>System Functions</h4>
+                        <button class="admin-btn" onclick="exportAmenities()">📥 Export List</button>
+                        <div id="admin-only-functions" style="display: none;">
+                            <button class="admin-btn" onclick="resetAmenities()">🔄 Reset to Default</button>
+                            <textarea class="admin-input" id="import-amenities" placeholder="Paste amenities list (one per line) and click Import..." rows="4"></textarea>
+                            <button class="admin-btn" onclick="importAmenities()">📤 Import List</button>
+                            <button class="admin-btn" onclick="saveAmenitiesConfig()">💾 Save Configuration</button>
+                            <button class="admin-btn" onclick="logoutAdmin()">🚪 Logout</button>
+                        </div>
+                        <div id="admin-login-prompt" style="display: block;">
+                            <p style="color: #888; font-size: 12px; margin: 10px 0;">Enter password above to access editing functions</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- History Section -->
+                <div id="history-section" class="admin-tab-content" style="display: none;">
+                    <div class="admin-section">
+                        <h4>Share History</h4>
+                        <p style="color: #888; font-size: 12px; margin-bottom: 15px;">Track of all items shared via WhatsApp</p>
+                        <div class="history-controls">
+                            <button class="admin-btn" onclick="refreshHistory()">🔄 Refresh</button>
+                            <button class="admin-btn danger" onclick="clearShareHistory()">🗑️ Clear All History</button>
+                        </div>
+                        <div id="history-list" class="history-container">
+                            <p style="color: #888; text-align: center; padding: 20px;">Loading history...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Action Buttons -->
+    <div class="floating-buttons floating-copy" id="floating-copy">
+        <button class="floating-btn" onclick="copyToClipboard()" title="Copy to Clipboard">📋</button>
+    </div>
+    <div class="floating-buttons floating-whatsapp" id="floating-whatsapp">
+        <button class="floating-btn" onclick="shareToWhatsApp()" title="Share via WhatsApp">📱</button>
+    </div>
+
+    <script>
+        // In-memory data storage using localStorage for persistence
+        const STORAGE_KEYS = {
+            AMENITIES_CONFIG: 'oblu_amenities_config',
+            SHARE_HISTORY: 'oblu_share_history'
+        };
+
+        // Categorized Amenities System
+        let AMENITIES_CATEGORIES = {
+            'Bathroom Items': [
+                'Toilet Roll', 'Tissue Box', 'Soap', 'Vanity Kit', 'Shower Cap',
+                'Sanitary Bag', 'Dental Kit', 'Shaving Kit', 'swing kit', 'Comb',
+                'Loofah', 'Hand Wash (3L)', 'Body Lotion (3L)', 'Shampoo (3L)',
+                'Conditioner (3L)', 'Shower Gel (3L)', 'Hand Wash (300ML)',
+                'Body Lotion (300ML)', 'Shampoo (300ML)', 'Conditioner (300ML)',
+                'Shower Gel (300ML)', 'Bathrobe', 'Hairdryer'
+            ],
+            'Bedroom Items': [
+                'Indoor Slippers', 'Outdoor Slippers (Female)', 'Outdoor Slippers (Male)',
+                'Cremesso (Coffee Capsules)', 'Intenso (Coffee Capsules)', 'Decaf (Coffee Capsules)',
+                'Milk Capsule', 'Equal Sugar', 'Brown Sugar', 'White Sugar',
+                'English Breakfast Tea', 'Chamomile Tea', 'Green Tea', 'Earl Grey Tea', 'Peppermint Tea'
+            ],
+            'General Items': [
+                'Coffee cup', 'Coffee cup (saucer)', 'Water glass', 'Wine glass', 'Spoon',
+                'DND Card', 'Garbage Bag (Big)', 'Garbage Bag (Small)', 'Beach Bag'
+            ],
+            'Cleaning Equipment': [
+                'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'Metal Polish', 'Brasso'
+            ],
+            'Linen Items': [
+                'Bed sheet (Small)', 'Bed sheet (Large)', 'Duvet cover (Small)',
+                'Duvet cover (Large) – White Water villa', 'Pillow Protector (Small) (Soft)',
+                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) – White',
+                'Pillow cover (Large) (Firm)', 'Kimono L', 'Kimono M',
+                'Beach towel (Guest) (New Blue)', 'Bath towel', 'Hand towel',
+                'Face towel', 'Bath mat', 'Turndown mat', 'Rug'
+            ]
+        };
+
+        // Flatten categories into single array for compatibility
+        let AMENITIES = [];
+        function updateAmenitiesArray() {
+            AMENITIES = [];
+            Object.values(AMENITIES_CATEGORIES).forEach(categoryItems => {
+                AMENITIES.push(...categoryItems);
+            });
+        }
+        updateAmenitiesArray();
+
+        // Global variables
+        let selectedAmenities = [];
+        let selectedVilla = null;
+        let isAdminMode = false;
+        let currentAdminSection = 'manage';
+        let adminAuthenticated = false;
+        let currentSearchTerm = '';
+        let currentCategoryFilter = 'all';
+        let searchTimeout = null;
+
+        // Global villa names mapping
+        const villaNames = {
+            'water-villa-1st': 'Water Villa 1st Pantry',
+            'water-villa-2nd': 'Water Villa 2nd Pantry',
+            'beach-villa-1st': 'Beach Villa 1st Pantry',
+            'beach-villa-2nd': 'Beach Villa 2nd Pantry'
+        };
+
+        // Default categories backup (after adding Cleaning Equipment)
+        const DEFAULT_CATEGORIES = {
+            'Bathroom Items': [
+                'Toilet Roll', 'Tissue Box', 'Soap', 'Vanity Kit', 'Shower Cap',
+                'Sanitary Bag', 'Dental Kit', 'Shaving Kit', 'swing kit', 'Comb',
+                'Loofah', 'Hand Wash (3L)', 'Body Lotion (3L)', 'Shampoo (3L)',
+                'Conditioner (3L)', 'Shower Gel (3L)', 'Hand Wash (300ML)',
+                'Body Lotion (300ML)', 'Shampoo (300ML)', 'Conditioner (300ML)',
+                'Shower Gel (300ML)', 'Bathrobe', 'Hairdryer'
+            ],
+            'Bedroom Items': [
+                'Indoor Slippers', 'Outdoor Slippers (Female)', 'Outdoor Slippers (Male)',
+                'Cremesso (Coffee Capsules)', 'Intenso (Coffee Capsules)', 'Decaf (Coffee Capsules)',
+                'Milk Capsule', 'Equal Sugar', 'Brown Sugar', 'White Sugar',
+                'English Breakfast Tea', 'Chamomile Tea', 'Green Tea', 'Earl Grey Tea', 'Peppermint Tea'
+            ],
+            'General Items': [
+                'Coffee cup', 'Coffee cup (saucer)', 'Water glass', 'Wine glass', 'Spoon',
+                'DND Card', 'Garbage Bag (Big)', 'Garbage Bag (Small)', 'Beach Bag'
+            ],
+            'Cleaning Equipment': [
+                'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'Metal Polish', 'Brasso'
+            ],
+            'Linen Items': [
+                'Bed sheet (Small)', 'Bed sheet (Large)', 'Duvet cover (Small)',
+                'Duvet cover (Large) – White Water villa', 'Pillow Protector (Small) (Soft)',
+                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) – White',
+                'Pillow cover (Large) (Firm)', 'Kimono L', 'Kimono M',
+                'Beach towel (Guest) (New Blue)', 'Bath towel', 'Hand towel',
+                'Face towel', 'Bath mat', 'Turndown mat', 'Rug'
+            ]
+        };
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Force update to latest categories with Cleaning Equipment
+            AMENITIES_CATEGORIES = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+            updateAmenitiesArray();
+            saveAmenitiesConfig(); // Save the updated categories immediately
+            
+            loadAmenitiesConfig();
+            initializeUI();
+            console.log(`
+        === OBLU SELECT Sangeli Amenities Manager ===
+        
+        Features:
+        - Password-protected admin panel (9999) with categorized amenities
+        - Multiple sharing options (WhatsApp, Telegram, SMS, Email, Viber, Messenger, Twitter, LinkedIn)
+        - Multiple color themes (Green, Blue, Purple, Orange)
+        - Selected items displayed at top with double-tap removal
+        - Villa selection system with pantry options
+        - Quick admin dashboard widget for real-time management
+        
+        Current amenities count: ${AMENITIES.length}
+        Categories: ${Object.keys(AMENITIES_CATEGORIES).join(', ')}
+        `);
+        });
+
+        // Initialize UI
+        function initializeUI() {
+            renderAmenities();
+            updateCategoriesView();
+            initializeSearchAndFilter();
+            
+            // Set up event listeners
+            document.getElementById('copy-btn').addEventListener('click', copyToClipboard);
+            document.getElementById('whatsapp-btn').addEventListener('click', shareToWhatsApp);
+            document.getElementById('clear-btn').addEventListener('click', clearList);
+            
+            // Villa selection buttons
+            document.querySelectorAll('.villa-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    selectVilla(this.getAttribute('data-villa'));
+                });
+            });
+        }
+
+        // Initialize search and filter functionality
+        function initializeSearchAndFilter() {
+            const searchInput = document.getElementById('search-input');
+            const searchClear = document.getElementById('search-clear');
+            
+            // Real-time search with debouncing
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                const searchTerm = this.value.trim();
+                
+                // Show/hide clear button
+                if (searchTerm) {
+                    searchClear.classList.add('show');
+                } else {
+                    searchClear.classList.remove('show');
+                }
+                
+                // Debounce search to avoid excessive filtering
+                searchTimeout = setTimeout(() => {
+                    performSearch(searchTerm);
+                }, 300);
+            });
+            
+            // Clear search when pressing Escape
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    clearSearch();
+                }
+            });
+            
+            // Generate category filter buttons
+            renderCategoryFilters();
+        }
+
+        // Render category filter buttons
+        function renderCategoryFilters() {
+            const filterContainer = document.getElementById('filter-container');
+            
+            // Clear existing filters except "All Categories"
+            const allButton = filterContainer.querySelector('[data-category="all"]');
+            if (allButton) {
+                filterContainer.innerHTML = '';
+                filterContainer.appendChild(allButton);
+            } else {
+                filterContainer.innerHTML = '<button class="filter-btn active" data-category="all" onclick="filterByCategory(\'all\')">All Categories</button>';
+            }
+            
+            // Add category-specific filters
+            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
+                const filterBtn = document.createElement('button');
+                filterBtn.className = 'filter-btn';
+                filterBtn.textContent = categoryName;
+                filterBtn.setAttribute('data-category', categoryName);
+                filterBtn.onclick = () => filterByCategory(categoryName);
+                filterContainer.appendChild(filterBtn);
+            });
+        }
+
+        // Perform search functionality
+        function performSearch(searchTerm) {
+            currentSearchTerm = searchTerm.toLowerCase();
+            applyFilters();
+        }
+
+        // Filter by category
+        function filterByCategory(category) {
+            currentCategoryFilter = category;
+            
+            // Update filter button states
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            const targetButton = document.querySelector(`[data-category="${category}"]`);
+            if (targetButton) {
+                targetButton.classList.add('active');
+            }
+            
+            applyFilters();
+            showMessage(`Filtered by: ${category === 'all' ? 'All Categories' : category}`, 'success');
+        }
+
+        // Apply all active filters
+        function applyFilters() {
+            const amenityButtons = document.querySelectorAll('.amenity-btn');
+            const categoryHeaders = document.querySelectorAll('.category-header');
+            let visibleItemsCount = 0;
+            let visibleCategoriesCount = 0;
+            
+            // Remove existing no-results message
+            const existingNoResults = document.querySelector('.no-results');
+            if (existingNoResults) {
+                existingNoResults.remove();
+            }
+            
+            // First, hide all items and headers
+            amenityButtons.forEach(btn => btn.classList.add('hidden'));
+            categoryHeaders.forEach(header => header.classList.add('hidden'));
+            
+            // Process each category
+            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
+                let categoryHasVisibleItems = false;
+                const categoryHeader = Array.from(categoryHeaders).find(header => 
+                    header.textContent === categoryName
+                );
+                
+                // Check if category should be visible based on filter
+                const categoryVisible = currentCategoryFilter === 'all' || currentCategoryFilter === categoryName;
+                
+                if (categoryVisible) {
+                    // Process items in this category
+                    AMENITIES_CATEGORIES[categoryName].forEach(item => {
+                        const itemButton = Array.from(amenityButtons).find(btn => 
+                            btn.textContent === item
+                        );
+                        
+                        if (itemButton) {
+                            const matchesSearch = !currentSearchTerm || 
+                                item.toLowerCase().includes(currentSearchTerm);
+                            
+                            if (matchesSearch) {
+                                itemButton.classList.remove('hidden');
+                                categoryHasVisibleItems = true;
+                                visibleItemsCount++;
+                                
+                                // Add highlight animation for search results
+                                if (currentSearchTerm && item.toLowerCase().includes(currentSearchTerm)) {
+                                    itemButton.classList.add('highlight');
+                                    setTimeout(() => {
+                                        itemButton.classList.remove('highlight');
+                                    }, 1500);
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Show category header if it has visible items
+                    if (categoryHasVisibleItems && categoryHeader) {
+                        categoryHeader.classList.remove('hidden');
+                        visibleCategoriesCount++;
+                    }
+                }
+            });
+            
+            // Show no results message if needed
+            if (visibleItemsCount === 0) {
+                const amenitiesGrid = document.getElementById('amenities-grid');
+                const noResultsDiv = document.createElement('div');
+                noResultsDiv.className = 'no-results';
+                noResultsDiv.textContent = currentSearchTerm ? 
+                    `No amenities found for "${currentSearchTerm}"` : 
+                    'No amenities in this category';
+                amenitiesGrid.appendChild(noResultsDiv);
+            }
+            
+            // Update search statistics
+            updateSearchStats(visibleItemsCount, visibleCategoriesCount);
+        }
+
+        // Update search statistics
+        function updateSearchStats(visibleItems, visibleCategories) {
+            const searchStats = document.getElementById('search-stats');
+            const totalItems = AMENITIES.length;
+            const totalCategories = Object.keys(AMENITIES_CATEGORIES).length;
+            
+            let statsText = '';
+            
+            if (currentSearchTerm && currentCategoryFilter !== 'all') {
+                statsText = `Found ${visibleItems} items in "${currentCategoryFilter}" matching "${currentSearchTerm}"`;
+            } else if (currentSearchTerm) {
+                statsText = `Found ${visibleItems} items across ${visibleCategories} categories matching "${currentSearchTerm}"`;
+            } else if (currentCategoryFilter !== 'all') {
+                statsText = `Showing ${visibleItems} items in "${currentCategoryFilter}"`;
+            } else {
+                statsText = `Showing all ${totalItems} amenities across ${totalCategories} categories`;
+            }
+            
+            searchStats.textContent = statsText;
+            
+            // Add highlight class for active filters
+            if (currentSearchTerm || currentCategoryFilter !== 'all') {
+                searchStats.classList.add('highlight');
+            } else {
+                searchStats.classList.remove('highlight');
+            }
+        }
+
+        // Clear search
+        function clearSearch() {
+            const searchInput = document.getElementById('search-input');
+            const searchClear = document.getElementById('search-clear');
+            
+            searchInput.value = '';
+            searchClear.classList.remove('show');
+            currentSearchTerm = '';
+            
+            applyFilters();
+            showMessage('Search cleared', 'success');
+        }
+
+        // Quick filter shortcuts
+        function quickFilter(term) {
+            const searchInput = document.getElementById('search-input');
+            searchInput.value = term;
+            document.getElementById('search-clear').classList.add('show');
+            performSearch(term);
+        }
+
+        // Load amenities configuration from localStorage
+        function loadAmenitiesConfig() {
+            try {
+                const savedConfig = localStorage.getItem(STORAGE_KEYS.AMENITIES_CONFIG);
+                if (savedConfig) {
+                    AMENITIES_CATEGORIES = JSON.parse(savedConfig);
+                    updateAmenitiesArray();
+                    console.log('Loaded saved amenities configuration');
+                }
+            } catch (error) {
+                console.error('Error loading amenities config:', error);
+            }
+        }
+
+        // Save amenities configuration to localStorage
+        function saveAmenitiesConfig() {
+            try {
+                localStorage.setItem(STORAGE_KEYS.AMENITIES_CONFIG, JSON.stringify(AMENITIES_CATEGORIES));
+                showMessage('Configuration saved successfully!', 'success');
+                console.log('Saved amenities configuration');
+            } catch (error) {
+                console.error('Error saving amenities config:', error);
+                showMessage('Failed to save configuration', 'error');
+            }
+        }
+
+        // Admin section navigation
+        function showAdminSection(section) {
+            currentAdminSection = section;
+            
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(section + '-btn').classList.add('active');
+            
+            // Show/hide sections
+            document.getElementById('manage-section').style.display = section === 'manage' ? 'block' : 'none';
+            document.getElementById('history-section').style.display = section === 'history' ? 'block' : 'none';
+            
+            // Load history if history section is selected
+            if (section === 'history') {
+                loadShareHistory();
+            }
+        }
+
+        // Load and display share history
+        function loadShareHistory() {
+            try {
+                const historyData = localStorage.getItem(STORAGE_KEYS.SHARE_HISTORY);
+                const history = historyData ? JSON.parse(historyData) : [];
+                displayHistory(history);
+            } catch (error) {
+                console.error('Error loading share history:', error);
+                document.getElementById('history-list').innerHTML = '<p style="color: #ff6666; text-align: center; padding: 20px;">Error loading history</p>';
+            }
+        }
+
+        // Display history in the admin panel
+        function displayHistory(history) {
+            const historyContainer = document.getElementById('history-list');
+            
+            if (history.length === 0) {
+                historyContainer.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No sharing history yet</p>';
+                return;
+            }
+            
+            historyContainer.innerHTML = history.map(item => `
+                <div class="history-item">
+                    <div class="history-header">
+                        <span>${item.platform || 'WhatsApp'}</span>
+                        <span style="font-size: 11px; color: #888;">${new Date(item.shared_at).toLocaleString()}</span>
+                    </div>
+                    ${item.villa_type ? `<div class="history-villa">${item.villa_type}</div>` : ''}
+                    <div class="history-amenities">${item.amenities.join(', ')}</div>
+                </div>
+            `).join('');
+        }
+
+        // Save share history to localStorage
+        function saveShareHistoryLocal(villaType, amenities, platform) {
+            try {
+                const historyData = localStorage.getItem(STORAGE_KEYS.SHARE_HISTORY);
+                const history = historyData ? JSON.parse(historyData) : [];
+                
+                history.unshift({
+                    villa_type: villaType,
+                    amenities: amenities,
+                    platform: platform,
+                    shared_at: new Date().toISOString()
+                });
+                
+                // Keep only last 100 entries
+                if (history.length > 100) {
+                    history.splice(100);
+                }
+                
+                localStorage.setItem(STORAGE_KEYS.SHARE_HISTORY, JSON.stringify(history));
+            } catch (error) {
+                console.error('Error saving share history:', error);
+            }
+        }
+
+        // Clear share history
+        function clearShareHistory() {
+            if (confirm('Are you sure you want to clear all sharing history? This cannot be undone.')) {
+                localStorage.removeItem(STORAGE_KEYS.SHARE_HISTORY);
+                loadShareHistory();
+                showMessage('History cleared successfully', 'success');
+            }
+        }
+
+        // Refresh history display
+        function refreshHistory() {
+            loadShareHistory();
+            showMessage('History refreshed', 'success');
+        }
+
+        // Render amenities grid with categories
+        function renderAmenities() {
+            const amenitiesGrid = document.getElementById('amenities-grid');
+            amenitiesGrid.innerHTML = '';
+
+            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
+                // Add category header
+                const categoryHeader = document.createElement('div');
+                categoryHeader.className = 'category-header';
+                categoryHeader.textContent = categoryName;
+                amenitiesGrid.appendChild(categoryHeader);
+
+                // Add amenities in this category
+                AMENITIES_CATEGORIES[categoryName].forEach(amenity => {
+                    const amenityBtn = document.createElement('button');
+                    amenityBtn.className = 'amenity-btn';
+                    amenityBtn.textContent = amenity;
+                    amenityBtn.onclick = () => toggleAmenity(amenity);
+                    amenitiesGrid.appendChild(amenityBtn);
+                });
+            });
+
+            // Update filter buttons and apply current filters
+            if (document.getElementById('filter-container')) {
+                renderCategoryFilters();
+                applyFilters();
+            }
+        }
+
+        // Toggle amenity selection
+        function toggleAmenity(amenity) {
+            const index = selectedAmenities.indexOf(amenity);
+            if (index > -1) {
+                selectedAmenities.splice(index, 1);
+                showMessage(`Removed: ${amenity}`, 'success');
+            } else {
+                selectedAmenities.push(amenity);
+                showMessage(`Added: ${amenity}`, 'success');
+            }
+            updateSelectedItemsDisplay();
+            updateAmenityButtons();
+        }
+
+        // Remove amenity (for double-tap functionality)
+        function removeAmenity(amenity) {
+            const index = selectedAmenities.indexOf(amenity);
+            if (index > -1) {
+                selectedAmenities.splice(index, 1);
+                updateSelectedItemsDisplay();
+                updateAmenityButtons();
+                showMessage(`Removed: ${amenity}`, 'success');
+            }
+        }
+
+        // Update Selected Items Display
+        function updateSelectedItemsDisplay() {
+            const villaInfo = selectedVilla ? `${villaNames[selectedVilla]}\n\n` : '';
+            document.getElementById('selected-items').value = villaInfo + selectedAmenities.join('\n');
+            updateFloatingButtons();
+        }
+
+        // Update floating buttons visibility
+        function updateFloatingButtons() {
+            const floatingCopy = document.getElementById('floating-copy');
+            const floatingWhatsApp = document.getElementById('floating-whatsapp');
+            
+            if (selectedAmenities.length > 0) {
+                floatingCopy.classList.add('show');
+                floatingWhatsApp.classList.add('show');
+            } else {
+                floatingCopy.classList.remove('show');
+                floatingWhatsApp.classList.remove('show');
+            }
+        }
+
+        // Handle double-tap removal from textarea
+        let lastTap = 0;
+        document.getElementById('selected-items').addEventListener('click', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 500 && tapLength > 0) {
+                // Double tap detected
+                const textarea = e.target;
+                const cursorPosition = textarea.selectionStart;
+                const textValue = textarea.value;
+                const textBeforeCursor = textValue.substring(0, cursorPosition);
+                const textAfterCursor = textValue.substring(cursorPosition);
+                const linesBefore = textBeforeCursor.split('\n');
+                const linesAfter = textAfterCursor.split('\n');
+                const currentLine = linesBefore[linesBefore.length - 1] + linesAfter[0];
+                
+                const lineContent = currentLine.trim();
+                if (lineContent && selectedAmenities.includes(lineContent)) {
+                    removeAmenity(lineContent);
+                }
+            }
+            lastTap = currentTime;
+        });
+
+        // Update amenity button states
+        function updateAmenityButtons() {
+            document.querySelectorAll('.amenity-btn').forEach(btn => {
+                if (selectedAmenities.includes(btn.textContent)) {
+                    btn.classList.add('selected');
+                } else {
+                    btn.classList.remove('selected');
+                }
+            });
+        }
+
+        // Villa selection
+        function selectVilla(villaType) {
+            selectedVilla = villaType;
+            
+            // Update villa button states
+            document.querySelectorAll('.villa-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelector(`[data-villa="${villaType}"]`).classList.add('selected');
+            
+            // Update display
+            const selectedVillaDiv = document.getElementById('selected-villa');
+            selectedVillaDiv.textContent = `Selected: ${villaNames[villaType]}`;
+            updateSelectedItemsDisplay();
+            showMessage(`Selected ${villaNames[villaType]}`, 'success');
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard() {
+            if (selectedAmenities.length === 0) {
+                showMessage('No items selected to copy!', 'error');
+                return;
+            }
+
+            const villaInfo = selectedVilla ? `${villaNames[selectedVilla]}\n\n` : '';
+            const textToCopy = villaInfo + selectedAmenities.join('\n');
+            
+            // Try modern clipboard API first
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showMessage('List copied to clipboard!', 'success');
+                }).catch(() => {
+                    fallbackCopyToClipboard(textToCopy);
+                });
+            } else {
+                // Use fallback method
+                fallbackCopyToClipboard(textToCopy);
+            }
+        }
+
+        function fallbackCopyToClipboard(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showMessage('List copied to clipboard!', 'success');
+                } else {
+                    showMessage('Please select and copy the text manually', 'error');
+                }
+            } catch (err) {
+                showMessage('Please select and copy the text manually', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+
+        // Share to WhatsApp
+        function shareToWhatsApp() {
+            if (selectedAmenities.length === 0) {
+                showMessage('No items selected to share!', 'error');
+                return;
+            }
+
+            const villaInfo = selectedVilla ? `${villaNames[selectedVilla]}\n\n` : '';
+            const message = `${villaInfo}${selectedAmenities.join('\n')}`;
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappURL = `https://wa.me/?text=${encodedMessage}`;
+            
+            // Save to history
+            saveShareHistoryLocal(selectedVilla ? villaNames[selectedVilla] : '', selectedAmenities, 'WhatsApp');
+            
+            window.open(whatsappURL, '_blank');
+            showMessage('Opening WhatsApp...', 'success');
+        }
+
+        // Clear List
+        function clearList() {
+            if (selectedAmenities.length === 0) {
+                showMessage('No items to clear!', 'error');
+                return;
+            }
+            
+            selectedAmenities = [];
+            updateSelectedItemsDisplay();
+            updateAmenityButtons();
+            updateFloatingButtons();
+            showMessage('List cleared!', 'success');
+        }
+
+        // Show message
+        function showMessage(text, type) {
+            const existingMessage = document.querySelector('.message');
+            if (existingMessage) {
+                existingMessage.remove();
+            }
+
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.textContent = text;
+            document.body.appendChild(message);
+
+            setTimeout(() => message.classList.add('show'), 100);
+            setTimeout(() => {
+                message.classList.remove('show');
+                setTimeout(() => message.remove(), 300);
+            }, 2000);
+        }
+
+        // Theme switching
+        function changeTheme(theme) {
+            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.theme-btn.${theme}`).classList.add('active');
+            
+            const root = document.documentElement;
+            switch(theme) {
+                case 'blue':
+                    root.style.setProperty('--primary-color', '#0066ff');
+                    break;
+                case 'purple':
+                    root.style.setProperty('--primary-color', '#cc00cc');
+                    break;
+                case 'orange':
+                    root.style.setProperty('--primary-color', '#ff6600');
+                    break;
+                default:
+                    root.style.setProperty('--primary-color', '#00cc00');
+            }
+            
+            showMessage(`Theme changed to ${theme}`, 'success');
+        }
+
+        // Admin Panel Functions
+        let adminContentVisible = false;
+
+        function toggleAdmin() {
+            const adminPassword = document.getElementById('admin-password');
+            const adminContent = document.getElementById('admin-content');
+            
+            if (!adminAuthenticated) {
+                if (adminPassword.classList.contains('show')) {
+                    adminPassword.classList.remove('show');
+                } else {
+                    adminPassword.classList.add('show');
+                }
+            } else {
+                adminContent.classList.toggle('show');
+                if (adminContent.classList.contains('show')) {
+                    updateCategoriesView();
+                }
+            }
+        }
+
+        function authenticateAdmin() {
+            const passwordInput = document.getElementById('admin-password-input');
+            const password = passwordInput.value;
+            
+            if (password === '9999') {
+                adminAuthenticated = true;
+                isAdminMode = true;
+                document.getElementById('admin-password').classList.remove('show');
+                document.getElementById('admin-content').classList.add('show');
+                document.getElementById('admin-nav').style.display = 'flex';
+                
+                document.getElementById('admin-edit-section').style.display = 'block';
+                document.getElementById('admin-item-section').style.display = 'block';
+                document.getElementById('admin-only-functions').style.display = 'block';
+                document.getElementById('admin-login-prompt').style.display = 'none';
+                
+                passwordInput.value = '';
+                updateCategoryManagement();
+                updateCategoriesView();
+                showAdminSection('manage'); // Show manage section by default
+                showMessage('Admin access granted!', 'success');
+            } else {
+                showMessage('Incorrect password!', 'error');
+                passwordInput.value = '';
+            }
+        }
+
+        function logoutAdmin() {
+            adminAuthenticated = false;
+            isAdminMode = false;
+            document.getElementById('admin-content').classList.remove('show');
+            document.getElementById('admin-password').classList.remove('show');
+            document.getElementById('admin-nav').style.display = 'none';
+            
+            document.getElementById('admin-edit-section').style.display = 'none';
+            document.getElementById('admin-item-section').style.display = 'none';
+            document.getElementById('admin-only-functions').style.display = 'none';
+            document.getElementById('admin-login-prompt').style.display = 'block';
+            
+            showMessage('Logged out from admin panel', 'success');
+        }
+
+        function handlePasswordKeyPress(event) {
+            if (event.key === 'Enter') {
+                authenticateAdmin();
+            }
+        }
+
+        // Category Management Functions
+        function updateCategoryManagement() {
+            updateCategoryList();
+            updateCategorySelect();
+            updateItemsList();
+        }
+
+        function updateCategoriesView() {
+            const categoriesView = document.getElementById('categories-view');
+            categoriesView.innerHTML = '';
+            
+            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category-item';
+                categoryDiv.style.flexDirection = 'column';
+                categoryDiv.style.alignItems = 'flex-start';
+                categoryDiv.style.marginBottom = '10px';
+                
+                const categoryHeader = document.createElement('div');
+                categoryHeader.style.fontWeight = 'bold';
+                categoryHeader.style.color = '#00cc00';
+                categoryHeader.style.marginBottom = '5px';
+                categoryHeader.textContent = `${categoryName} (${AMENITIES_CATEGORIES[categoryName].length} items)`;
+                
+                const itemsList = document.createElement('div');
+                itemsList.style.fontSize = '12px';
+                itemsList.style.color = '#aaaaaa';
+                itemsList.style.marginLeft = '10px';
+                itemsList.textContent = AMENITIES_CATEGORIES[categoryName].join(', ');
+                
+                categoryDiv.appendChild(categoryHeader);
+                categoryDiv.appendChild(itemsList);
+                categoriesView.appendChild(categoryDiv);
+            });
+        }
+
+        function updateCategoryList() {
+            const categoryList = document.getElementById('category-list');
+            categoryList.innerHTML = '';
+            
+            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.className = 'category-item';
+                categoryDiv.innerHTML = `
+                    <span>${categoryName} (${AMENITIES_CATEGORIES[categoryName].length} items)</span>
+                    <button class="remove-btn" onclick="removeCategory('${categoryName}')">Remove</button>
+                `;
+                categoryList.appendChild(categoryDiv);
+            });
+        }
+
+        function updateCategorySelect() {
+            const categorySelect = document.getElementById('category-select');
+            categorySelect.innerHTML = '<option value="">Select category for new item</option>';
+            
+            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
+                const option = document.createElement('option');
+                option.value = categoryName;
+                option.textContent = categoryName;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        function updateItemsList() {
+            const itemsList = document.getElementById('items-list');
+            itemsList.innerHTML = '';
+            
+            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
+                const categoryDiv = document.createElement('div');
+                categoryDiv.innerHTML = `<h5 style="color: #00cc00; margin: 10px 0 5px 0;">${categoryName}</h5>`;
+                
+                AMENITIES_CATEGORIES[categoryName].forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'category-item';
+                    itemDiv.innerHTML = `
+                        <span style="font-size: 12px;">${item}</span>
+                        <button class="remove-btn" onclick="removeItemFromCategory('${categoryName}', '${item}')">Remove</button>
+                    `;
+                    categoryDiv.appendChild(itemDiv);
+                });
+                
+                itemsList.appendChild(categoryDiv);
+            });
+        }
+
+        function addNewCategory() {
+            const newCategoryInput = document.getElementById('new-category');
+            const categoryName = newCategoryInput.value.trim();
+            
+            if (!categoryName) {
+                showMessage('Please enter a category name', 'error');
+                return;
+            }
+            
+            if (AMENITIES_CATEGORIES.hasOwnProperty(categoryName)) {
+                showMessage('Category already exists', 'error');
+                return;
+            }
+            
+            AMENITIES_CATEGORIES[categoryName] = [];
+            updateAmenitiesArray();
+            saveAmenitiesConfig(); // Auto-save configuration
+            renderAmenities();
+            updateCategoryManagement();
+            updateCategoriesView();
+            newCategoryInput.value = '';
+            showMessage(`Added category: ${categoryName}`, 'success');
+        }
+
+        function removeCategory(categoryName) {
+            if (confirm(`Are you sure you want to remove the "${categoryName}" category and all its items?`)) {
+                delete AMENITIES_CATEGORIES[categoryName];
+                updateAmenitiesArray();
+                saveAmenitiesConfig(); // Auto-save configuration
+                renderAmenities();
+                updateCategoryManagement();
+                updateCategoriesView();
+                showMessage(`Removed category: ${categoryName}`, 'success');
+            }
+        }
+
+        function addItemToCategory() {
+            const categorySelect = document.getElementById('category-select');
+            const newItemInput = document.getElementById('new-item');
+            const selectedCategory = categorySelect.value;
+            const newItem = newItemInput.value.trim();
+
+            if (!selectedCategory) {
+                showMessage('Please select a category', 'error');
+                return;
+            }
+
+            if (!newItem) {
+                showMessage('Please enter an item name', 'error');
+                return;
+            }
+
+            if (AMENITIES_CATEGORIES[selectedCategory].includes(newItem)) {
+                showMessage('Item already exists in this category', 'error');
+                return;
+            }
+
+            AMENITIES_CATEGORIES[selectedCategory].push(newItem);
+            updateAmenitiesArray();
+            saveAmenitiesConfig(); // Auto-save configuration
+            renderAmenities();
+            updateCategoryManagement();
+            updateCategoriesView();
+            newItemInput.value = '';
+            showMessage(`Added "${newItem}" to ${selectedCategory}`, 'success');
+        }
+
+        function addBulkItemsToCategory() {
+            const categorySelect = document.getElementById('category-select');
+            const bulkItemsInput = document.getElementById('bulk-items');
+            const selectedCategory = categorySelect.value;
+            const bulkText = bulkItemsInput.value.trim();
+
+            if (!selectedCategory) {
+                showMessage('Please select a category', 'error');
+                return;
+            }
+
+            if (!bulkText) {
+                showMessage('Please enter items to add (one per line)', 'error');
+                return;
+            }
+
+            const newItems = bulkText.split('\n')
+                .map(item => item.trim())
+                .filter(item => item.length > 0);
+
+            if (newItems.length === 0) {
+                showMessage('No valid items found to add', 'error');
+                return;
+            }
+
+            let addedCount = 0;
+            let skippedCount = 0;
+            const skippedItems = [];
+
+            newItems.forEach(item => {
+                if (AMENITIES_CATEGORIES[selectedCategory].includes(item)) {
+                    skippedCount++;
+                    skippedItems.push(item);
+                } else {
+                    AMENITIES_CATEGORIES[selectedCategory].push(item);
+                    addedCount++;
+                }
+            });
+
+            updateAmenitiesArray();
+            saveAmenitiesConfig(); // Auto-save configuration
+            renderAmenities();
+            updateCategoryManagement();
+            updateCategoriesView();
+            bulkItemsInput.value = '';
+
+            let message = `Added ${addedCount} items to ${selectedCategory}`;
+            if (skippedCount > 0) {
+                message += ` (${skippedCount} duplicates skipped)`;
+            }
+            showMessage(message, 'success');
+
+            if (skippedItems.length > 0 && skippedItems.length <= 3) {
+                setTimeout(() => {
+                    showMessage(`Skipped duplicates: ${skippedItems.join(', ')}`, 'error');
+                }, 2500);
+            }
+        }
+
+        function removeItemFromCategory(categoryName, item) {
+            if (confirm(`Remove "${item}" from ${categoryName}?`)) {
+                const index = AMENITIES_CATEGORIES[categoryName].indexOf(item);
+                if (index > -1) {
+                    AMENITIES_CATEGORIES[categoryName].splice(index, 1);
+                    
+                    // Also remove from selected items if it was selected
+                    const selectedIndex = selectedAmenities.indexOf(item);
+                    if (selectedIndex > -1) {
+                        selectedAmenities.splice(selectedIndex, 1);
+                        updateSelectedItemsDisplay();
+                    }
+                    
+                    updateAmenitiesArray();
+                    saveAmenitiesConfig(); // Auto-save configuration
+                    renderAmenities();
+                    updateCategoryManagement();
+                    updateCategoriesView();
+                    showMessage(`Removed "${item}" from ${categoryName}`, 'success');
+                }
+            }
+        }
+
+        function exportAmenities() {
+            const amenitiesText = AMENITIES.join('\n');
+            const blob = new Blob([amenitiesText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'amenities_list.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+            showMessage('Amenities list exported!', 'success');
+        }
+
+        function importAmenities() {
+            const importText = document.getElementById('import-amenities').value.trim();
+            
+            if (!importText) {
+                showMessage('Please paste amenities list to import', 'error');
+                return;
+            }
+            
+            const newAmenities = importText.split('\n').map(item => item.trim()).filter(item => item);
+            
+            if (newAmenities.length === 0) {
+                showMessage('No valid amenities found to import', 'error');
+                return;
+            }
+            
+            // Add to "General Items" category
+            if (!AMENITIES_CATEGORIES['General Items']) {
+                AMENITIES_CATEGORIES['General Items'] = [];
+            }
+            
+            let addedCount = 0;
+            newAmenities.forEach(amenity => {
+                let alreadyExists = false;
+                Object.values(AMENITIES_CATEGORIES).forEach(categoryItems => {
+                    if (categoryItems.includes(amenity)) {
+                        alreadyExists = true;
+                    }
+                });
+                
+                if (!alreadyExists) {
+                    AMENITIES_CATEGORIES['General Items'].push(amenity);
+                    addedCount++;
+                }
+            });
+            
+            updateAmenitiesArray();
+            saveAmenitiesConfig(); // Auto-save configuration
+            renderAmenities();
+            updateCategoryManagement();
+            updateCategoriesView();
+            document.getElementById('import-amenities').value = '';
+            showMessage(`Imported ${addedCount} new amenities`, 'success');
+        }
+
+        function resetAmenities() {
+            if (confirm('Are you sure you want to reset to default amenities? This will remove all custom additions.')) {
+                AMENITIES_CATEGORIES = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
+                updateAmenitiesArray();
+                saveAmenitiesConfig(); // Auto-save configuration
+                renderAmenities();
+                updateCategoryManagement();
+                updateCategoriesView();
+                showMessage('Reset to default amenities', 'success');
+            }
+        }
+    </script>
+</body>
+</html>
