@@ -716,7 +716,7 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <div class="logo">馃彎锔� OBLU SELECT Sangeli</div>
+        <div class="logo">🏝️ OBLU SELECT Sangeli</div>
         <div class="subtitle">Housekeeping Amenities Manager</div>
 
         <!-- Theme Selector -->
@@ -732,7 +732,7 @@
     <div class="container">
         <!-- Villa Selection -->
         <div class="villa-section">
-            <div class="section-title">馃彙 Select Villa & Pantry</div>
+            <div class="section-title">🏡 Select Villa & Pantry</div>
             <div class="villa-grid">
                 <button class="villa-btn" data-villa="water-villa-1st">Water Villa<br>1st Pantry</button>
                 <button class="villa-btn" data-villa="water-villa-2nd">Water Villa<br>2nd Pantry</button>
@@ -744,17 +744,17 @@
 
         <!-- Selected Items Display -->
         <div class="selected-items">
-            <div class="section-title">馃摑 Selected Items (Double-tap to remove)</div>
+            <div class="section-title">📝 Selected Items (Double-tap to remove)</div>
             <textarea class="selected-textarea" id="selected-items" placeholder="Selected amenities will appear here..." readonly></textarea>
         </div>
 
         <!-- Search and Filter -->
         <div class="search-filter-section">
-            <div class="section-title">馃攳 Search & Filter Amenities</div>
+            <div class="section-title">🔍 Search & Filter Amenities</div>
 
             <div class="search-container">
                 <input type="text" class="search-input" id="search-input" placeholder="Search amenities (e.g., towel, coffee, soap...)">
-                <button class="search-clear" id="search-clear" onclick="clearSearch()">鉁�</button>
+                <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
             </div>
 
             <div class="filter-container" id="filter-container">
@@ -767,7 +767,7 @@
 
         <!-- Amenities Selection -->
         <div class="amenities-section">
-            <div class="section-title">馃洀锔� Select Amenities</div>
+            <div class="section-title">🛏️ Select Amenities</div>
             <div class="amenities-grid" id="amenities-grid">
                 <!-- Amenities will be populated here -->
             </div>
@@ -775,22 +775,22 @@
 
         <!-- Action Buttons -->
         <div class="share-buttons">
-            <button class="copy-btn" id="copy-btn">馃搵 Copy List</button>
-            <button class="whatsapp-btn" id="whatsapp-btn">馃摫 Share WhatsApp</button>
+            <button class="copy-btn" id="copy-btn">📋 Copy List</button>
+            <button class="whatsapp-btn" id="whatsapp-btn">📱 Share WhatsApp</button>
         </div>
 
         <div class="action-buttons">
-            <button class="clear-btn" id="clear-btn">馃棏锔� Clear List</button>
+            <button class="clear-btn" id="clear-btn">🗑️ Clear List</button>
         </div>
 
         <!-- Admin Panel -->
         <div class="admin-panel">
-            <button class="admin-toggle" onclick="toggleAdmin()">馃敡 Admin Panel - Edit Amenities List</button>
+            <button class="admin-toggle" onclick="toggleAdmin()">🔧 Admin Panel - Edit Amenities List</button>
 
             <!-- Password Section -->
             <div class="admin-password" id="admin-password">
                 <input type="password" class="admin-input" id="admin-password-input" placeholder="Enter admin password" onkeypress="handlePasswordKeyPress(event)">
-                <button class="admin-btn" onclick="authenticateAdmin()">馃攽 Login</button>
+                <button class="admin-btn" onclick="authenticateAdmin()">🔑 Login</button>
             </div>
 
             <!-- Admin Navigation -->
@@ -813,7 +813,7 @@
                     <div class="admin-section" id="admin-edit-section" style="display: none;">
                         <h4>Category Management (Admin Only)</h4>
                         <input type="text" class="admin-input" id="new-category" placeholder="Add new category (e.g., Bathroom Items)">
-                        <button class="admin-btn" onclick="addNewCategory()">鉃� Add Category</button>
+                        <button class="admin-btn" onclick="addNewCategory()">➕ Add Category</button>
                         <div id="category-list"></div>
                     </div>
 
@@ -826,11 +826,11 @@
 
                         <!-- Single Item Add -->
                         <input type="text" class="admin-input" id="new-item" placeholder="Add new item to selected category">
-                        <button class="admin-btn" onclick="addItemToCategory()">鉃� Add Single Item</button>
+                        <button class="admin-btn" onclick="addItemToCategory()">➕ Add Single Item</button>
 
                         <!-- Bulk Item Add -->
                         <textarea class="admin-input" id="bulk-items" placeholder="Add multiple items (one per line) to selected category" rows="4" style="margin-top: 10px;"></textarea>
-                        <button class="admin-btn" onclick="addBulkItemsToCategory()" style="background: rgba(0, 150, 0, 0.8); border-color: #00bb00;">鉃� Add Multiple Items</button>
+                        <button class="admin-btn" onclick="addBulkItemsToCategory()" style="background: rgba(0, 150, 0, 0.8); border-color: #00bb00;">➕ Add Multiple Items</button>
 
                         <div id="items-list"></div>
                     </div>
@@ -838,13 +838,13 @@
                     <!-- System Functions -->
                     <div class="admin-section">
                         <h4>System Functions</h4>
-                        <button class="admin-btn" onclick="exportAmenities()">馃摜 Export List</button>
+                        <button class="admin-btn" onclick="exportAmenities()">📥 Export List</button>
                         <div id="admin-only-functions" style="display: none;">
-                            <button class="admin-btn" onclick="resetAmenities()">馃攧 Reset to Default</button>
+                            <button class="admin-btn" onclick="resetAmenities()">🔄 Reset to Default</button>
                             <textarea class="admin-input" id="import-amenities" placeholder="Paste amenities list (one per line) and click Import..." rows="4"></textarea>
-                            <button class="admin-btn" onclick="importAmenities()">馃摛 Import List</button>
-                            <button class="admin-btn" onclick="saveAmenitiesConfig()">馃捑 Save Configuration</button>
-                            <button class="admin-btn" onclick="logoutAdmin()">馃毆 Logout</button>
+                            <button class="admin-btn" onclick="importAmenities()">📤 Import List</button>
+                            <button class="admin-btn" onclick="saveAmenitiesConfig()">💾 Save Configuration</button>
+                            <button class="admin-btn" onclick="logoutAdmin()">🚪 Logout</button>
                         </div>
                         <div id="admin-login-prompt" style="display: block;">
                             <p style="color: #888; font-size: 12px; margin: 10px 0;">Enter password above to access editing functions</p>
@@ -858,8 +858,8 @@
                         <h4>Share History</h4>
                         <p style="color: #888; font-size: 12px; margin-bottom: 15px;">Track of all items shared via WhatsApp</p>
                         <div class="history-controls">
-                            <button class="admin-btn" onclick="refreshHistory()">馃攧 Refresh</button>
-                            <button class="admin-btn danger" onclick="clearShareHistory()">馃棏锔� Clear All History</button>
+                            <button class="admin-btn" onclick="refreshHistory()">🔄 Refresh</button>
+                            <button class="admin-btn danger" onclick="clearShareHistory()">🗑️ Clear All History</button>
                         </div>
                         <div id="history-list" class="history-container">
                             <p style="color: #888; text-align: center; padding: 20px;">Loading history...</p>
@@ -872,10 +872,10 @@
 
     <!-- Floating Action Buttons -->
     <div class="floating-buttons floating-copy" id="floating-copy">
-        <button class="floating-btn" onclick="copyToClipboard()" title="Copy to Clipboard">馃搵</button>
+        <button class="floating-btn" onclick="copyToClipboard()" title="Copy to Clipboard">📋</button>
     </div>
     <div class="floating-buttons floating-whatsapp" id="floating-whatsapp">
-        <button class="floating-btn" onclick="shareToWhatsApp()" title="Share via WhatsApp">馃摫</button>
+        <button class="floating-btn" onclick="shareToWhatsApp()" title="Share via WhatsApp">📱</button>
     </div>
 
     <script>
@@ -913,8 +913,8 @@
             ],
             'Linen Items': [
                 'Bed sheet (Small)', 'Bed sheet (Large)', 'Duvet cover (Small)',
-                'Duvet cover (Large) 鈥� White Water villa', 'Pillow Protector (Small) (Soft)',
-                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) 鈥� White',
+                'Duvet cover (Large) – White Water villa', 'Pillow Protector (Small) (Soft)',
+                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) – White',
                 'Pillow cover (Large) (Firm)', 'Kimono L', 'Kimono M',
                 'Beach towel (Guest) (New Blue)', 'Bath towel', 'Hand towel',
                 'Face towel', 'Bath mat', 'Turndown mat', 'Rug'
@@ -977,8 +977,8 @@
             ],
             'Linen Items': [
                 'Bed sheet (Small)', 'Bed sheet (Large)', 'Duvet cover (Small)',
-                'Duvet cover (Large) 鈥� White Water villa', 'Pillow Protector (Small) (Soft)',
-                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) 鈥� White',
+                'Duvet cover (Large) – White Water villa', 'Pillow Protector (Small) (Soft)',
+                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) – White',
                 'Pillow cover (Large) (Firm)', 'Kimono L', 'Kimono M',
                 'Beach towel (Guest) (New Blue)', 'Bath towel', 'Hand towel',
                 'Face towel', 'Bath mat', 'Turndown mat', 'Rug'
