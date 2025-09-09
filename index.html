@@ -330,6 +330,23 @@
             box-shadow: 0 0 15px rgba(0, 204, 0, 0.6);
         }
 
+        /* Added styling for Segafredo capsules */
+        .amenity-btn.light-red {
+            background-color: rgba(255, 102, 102, 0.2); /* Light red background */
+            border-color: #ff6666; /* Red border */
+        }
+        .amenity-btn.light-red:hover {
+            background-color: rgba(255, 102, 102, 0.3);
+            box-shadow: 0 0 10px rgba(255, 102, 102, 0.4);
+        }
+        .amenity-btn.light-red.selected {
+            background-color: rgba(255, 102, 102, 0.4);
+            border-color: #ff6666;
+            color: #ffffff;
+            box-shadow: 0 0 15px rgba(255, 102, 102, 0.6);
+        }
+
+
         /* Floating Action Buttons */
         .floating-buttons {
             position: fixed;
@@ -699,9 +716,9 @@
 <body>
     <!-- Header -->
     <div class="header">
-        <div class="logo">🏝️ OBLU SELECT Sangeli</div>
+        <div class="logo">馃彎锔� OBLU SELECT Sangeli</div>
         <div class="subtitle">Housekeeping Amenities Manager</div>
-        
+
         <!-- Theme Selector -->
         <div class="theme-selector">
             <div class="theme-btn green active" onclick="changeTheme('green')"></div>
@@ -715,7 +732,7 @@
     <div class="container">
         <!-- Villa Selection -->
         <div class="villa-section">
-            <div class="section-title">🏡 Select Villa & Pantry</div>
+            <div class="section-title">馃彙 Select Villa & Pantry</div>
             <div class="villa-grid">
                 <button class="villa-btn" data-villa="water-villa-1st">Water Villa<br>1st Pantry</button>
                 <button class="villa-btn" data-villa="water-villa-2nd">Water Villa<br>2nd Pantry</button>
@@ -727,30 +744,30 @@
 
         <!-- Selected Items Display -->
         <div class="selected-items">
-            <div class="section-title">📝 Selected Items (Double-tap to remove)</div>
+            <div class="section-title">馃摑 Selected Items (Double-tap to remove)</div>
             <textarea class="selected-textarea" id="selected-items" placeholder="Selected amenities will appear here..." readonly></textarea>
         </div>
 
         <!-- Search and Filter -->
         <div class="search-filter-section">
-            <div class="section-title">🔍 Search & Filter Amenities</div>
-            
+            <div class="section-title">馃攳 Search & Filter Amenities</div>
+
             <div class="search-container">
                 <input type="text" class="search-input" id="search-input" placeholder="Search amenities (e.g., towel, coffee, soap...)">
-                <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+                <button class="search-clear" id="search-clear" onclick="clearSearch()">鉁�</button>
             </div>
-            
+
             <div class="filter-container" id="filter-container">
                 <button class="filter-btn active" data-category="all" onclick="filterByCategory('all')">All Categories</button>
                 <!-- Category filters will be populated here -->
             </div>
-            
+
             <div class="search-stats" id="search-stats">Showing all amenities</div>
         </div>
 
         <!-- Amenities Selection -->
         <div class="amenities-section">
-            <div class="section-title">🛏️ Select Amenities</div>
+            <div class="section-title">馃洀锔� Select Amenities</div>
             <div class="amenities-grid" id="amenities-grid">
                 <!-- Amenities will be populated here -->
             </div>
@@ -758,30 +775,30 @@
 
         <!-- Action Buttons -->
         <div class="share-buttons">
-            <button class="copy-btn" id="copy-btn">📋 Copy List</button>
-            <button class="whatsapp-btn" id="whatsapp-btn">📱 Share WhatsApp</button>
+            <button class="copy-btn" id="copy-btn">馃搵 Copy List</button>
+            <button class="whatsapp-btn" id="whatsapp-btn">馃摫 Share WhatsApp</button>
         </div>
-        
+
         <div class="action-buttons">
-            <button class="clear-btn" id="clear-btn">🗑️ Clear List</button>
+            <button class="clear-btn" id="clear-btn">馃棏锔� Clear List</button>
         </div>
 
         <!-- Admin Panel -->
         <div class="admin-panel">
-            <button class="admin-toggle" onclick="toggleAdmin()">🔧 Admin Panel - Edit Amenities List</button>
-            
+            <button class="admin-toggle" onclick="toggleAdmin()">馃敡 Admin Panel - Edit Amenities List</button>
+
             <!-- Password Section -->
             <div class="admin-password" id="admin-password">
                 <input type="password" class="admin-input" id="admin-password-input" placeholder="Enter admin password" onkeypress="handlePasswordKeyPress(event)">
-                <button class="admin-btn" onclick="authenticateAdmin()">🔑 Login</button>
+                <button class="admin-btn" onclick="authenticateAdmin()">馃攽 Login</button>
             </div>
-            
+
             <!-- Admin Navigation -->
             <div class="admin-nav" id="admin-nav">
                 <button onclick="showAdminSection('manage')" class="nav-btn active" id="manage-btn">Manage Amenities</button>
                 <button onclick="showAdminSection('history')" class="nav-btn" id="history-btn">Share History</button>
             </div>
-            
+
             <!-- Admin Content -->
             <div class="admin-content" id="admin-content">
                 <!-- Manage Amenities Section -->
@@ -791,58 +808,58 @@
                         <h4>Current Categories & Items</h4>
                         <div id="categories-view"></div>
                     </div>
-                
+
                     <!-- Category Management -->
                     <div class="admin-section" id="admin-edit-section" style="display: none;">
                         <h4>Category Management (Admin Only)</h4>
                         <input type="text" class="admin-input" id="new-category" placeholder="Add new category (e.g., Bathroom Items)">
-                        <button class="admin-btn" onclick="addNewCategory()">➕ Add Category</button>
+                        <button class="admin-btn" onclick="addNewCategory()">鉃� Add Category</button>
                         <div id="category-list"></div>
                     </div>
-                    
+
                     <!-- Item Management -->
                     <div class="admin-section" id="admin-item-section" style="display: none;">
                         <h4>Item Management (Admin Only)</h4>
                         <select class="admin-input" id="category-select">
                             <option value="">Select category for new item</option>
                         </select>
-                        
+
                         <!-- Single Item Add -->
                         <input type="text" class="admin-input" id="new-item" placeholder="Add new item to selected category">
-                        <button class="admin-btn" onclick="addItemToCategory()">➕ Add Single Item</button>
-                        
+                        <button class="admin-btn" onclick="addItemToCategory()">鉃� Add Single Item</button>
+
                         <!-- Bulk Item Add -->
                         <textarea class="admin-input" id="bulk-items" placeholder="Add multiple items (one per line) to selected category" rows="4" style="margin-top: 10px;"></textarea>
-                        <button class="admin-btn" onclick="addBulkItemsToCategory()" style="background: rgba(0, 150, 0, 0.8); border-color: #00bb00;">➕ Add Multiple Items</button>
-                        
+                        <button class="admin-btn" onclick="addBulkItemsToCategory()" style="background: rgba(0, 150, 0, 0.8); border-color: #00bb00;">鉃� Add Multiple Items</button>
+
                         <div id="items-list"></div>
                     </div>
-                    
+
                     <!-- System Functions -->
                     <div class="admin-section">
                         <h4>System Functions</h4>
-                        <button class="admin-btn" onclick="exportAmenities()">📥 Export List</button>
+                        <button class="admin-btn" onclick="exportAmenities()">馃摜 Export List</button>
                         <div id="admin-only-functions" style="display: none;">
-                            <button class="admin-btn" onclick="resetAmenities()">🔄 Reset to Default</button>
+                            <button class="admin-btn" onclick="resetAmenities()">馃攧 Reset to Default</button>
                             <textarea class="admin-input" id="import-amenities" placeholder="Paste amenities list (one per line) and click Import..." rows="4"></textarea>
-                            <button class="admin-btn" onclick="importAmenities()">📤 Import List</button>
-                            <button class="admin-btn" onclick="saveAmenitiesConfig()">💾 Save Configuration</button>
-                            <button class="admin-btn" onclick="logoutAdmin()">🚪 Logout</button>
+                            <button class="admin-btn" onclick="importAmenities()">馃摛 Import List</button>
+                            <button class="admin-btn" onclick="saveAmenitiesConfig()">馃捑 Save Configuration</button>
+                            <button class="admin-btn" onclick="logoutAdmin()">馃毆 Logout</button>
                         </div>
                         <div id="admin-login-prompt" style="display: block;">
                             <p style="color: #888; font-size: 12px; margin: 10px 0;">Enter password above to access editing functions</p>
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- History Section -->
                 <div id="history-section" class="admin-tab-content" style="display: none;">
                     <div class="admin-section">
                         <h4>Share History</h4>
                         <p style="color: #888; font-size: 12px; margin-bottom: 15px;">Track of all items shared via WhatsApp</p>
                         <div class="history-controls">
-                            <button class="admin-btn" onclick="refreshHistory()">🔄 Refresh</button>
-                            <button class="admin-btn danger" onclick="clearShareHistory()">🗑️ Clear All History</button>
+                            <button class="admin-btn" onclick="refreshHistory()">馃攧 Refresh</button>
+                            <button class="admin-btn danger" onclick="clearShareHistory()">馃棏锔� Clear All History</button>
                         </div>
                         <div id="history-list" class="history-container">
                             <p style="color: #888; text-align: center; padding: 20px;">Loading history...</p>
@@ -855,10 +872,10 @@
 
     <!-- Floating Action Buttons -->
     <div class="floating-buttons floating-copy" id="floating-copy">
-        <button class="floating-btn" onclick="copyToClipboard()" title="Copy to Clipboard">📋</button>
+        <button class="floating-btn" onclick="copyToClipboard()" title="Copy to Clipboard">馃搵</button>
     </div>
     <div class="floating-buttons floating-whatsapp" id="floating-whatsapp">
-        <button class="floating-btn" onclick="shareToWhatsApp()" title="Share via WhatsApp">📱</button>
+        <button class="floating-btn" onclick="shareToWhatsApp()" title="Share via WhatsApp">馃摫</button>
     </div>
 
     <script>
@@ -873,7 +890,8 @@
             'Bathroom Items': [
                 'Toilet Roll', 'Tissue Box', 'Soap', 'Vanity Kit', 'Shower Cap',
                 'Sanitary Bag', 'Dental Kit', 'Shaving Kit', 'swing kit', 'Comb',
-                'Loofah', 'Hand Wash (3L)', 'Body Lotion (3L)', 'Shampoo (3L)',
+                'Loofah', 'Lip Balm', 'Sunscreen Lotion', 'Insect Repellent Lotion',
+                'Hand Wash (3L)', 'Body Lotion (3L)', 'Shampoo (3L)',
                 'Conditioner (3L)', 'Shower Gel (3L)', 'Hand Wash (300ML)',
                 'Body Lotion (300ML)', 'Shampoo (300ML)', 'Conditioner (300ML)',
                 'Shower Gel (300ML)', 'Bathrobe', 'Hairdryer'
@@ -881,20 +899,22 @@
             'Bedroom Items': [
                 'Indoor Slippers', 'Outdoor Slippers (Female)', 'Outdoor Slippers (Male)',
                 'Cremesso (Coffee Capsules)', 'Intenso (Coffee Capsules)', 'Decaf (Coffee Capsules)',
+                'Segafredo Le Origini Brasil Capsules', 'Segafredo Espresso Capsules', 'Segafredo Decaffeinated Capsules',
                 'Milk Capsule', 'Equal Sugar', 'Brown Sugar', 'White Sugar',
                 'English Breakfast Tea', 'Chamomile Tea', 'Green Tea', 'Earl Grey Tea', 'Peppermint Tea'
             ],
             'General Items': [
                 'Coffee cup', 'Coffee cup (saucer)', 'Water glass', 'Wine glass', 'Spoon',
-                'DND Card', 'Garbage Bag (Big)', 'Garbage Bag (Small)', 'Beach Bag'
+                'DND Card', 'Garbage Bag (Big)', 'Garbage Bag (Small)', 'Beach Bag',
+                'Sponge', 'Steel Wool', 'Cotton Gloves'
             ],
             'Cleaning Equipment': [
                 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'Metal Polish', 'Brasso'
             ],
             'Linen Items': [
                 'Bed sheet (Small)', 'Bed sheet (Large)', 'Duvet cover (Small)',
-                'Duvet cover (Large) – White Water villa', 'Pillow Protector (Small) (Soft)',
-                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) – White',
+                'Duvet cover (Large) 鈥� White Water villa', 'Pillow Protector (Small) (Soft)',
+                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) 鈥� White',
                 'Pillow cover (Large) (Firm)', 'Kimono L', 'Kimono M',
                 'Beach towel (Guest) (New Blue)', 'Bath towel', 'Hand towel',
                 'Face towel', 'Bath mat', 'Turndown mat', 'Rug'
@@ -934,7 +954,8 @@
             'Bathroom Items': [
                 'Toilet Roll', 'Tissue Box', 'Soap', 'Vanity Kit', 'Shower Cap',
                 'Sanitary Bag', 'Dental Kit', 'Shaving Kit', 'swing kit', 'Comb',
-                'Loofah', 'Hand Wash (3L)', 'Body Lotion (3L)', 'Shampoo (3L)',
+                'Loofah', 'Lip Balm', 'Sunscreen Lotion', 'Insect Repellent Lotion',
+                'Hand Wash (3L)', 'Body Lotion (3L)', 'Shampoo (3L)',
                 'Conditioner (3L)', 'Shower Gel (3L)', 'Hand Wash (300ML)',
                 'Body Lotion (300ML)', 'Shampoo (300ML)', 'Conditioner (300ML)',
                 'Shower Gel (300ML)', 'Bathrobe', 'Hairdryer'
@@ -942,25 +963,47 @@
             'Bedroom Items': [
                 'Indoor Slippers', 'Outdoor Slippers (Female)', 'Outdoor Slippers (Male)',
                 'Cremesso (Coffee Capsules)', 'Intenso (Coffee Capsules)', 'Decaf (Coffee Capsules)',
+                'Segafredo Le Origini Brasil Capsules', 'Segafredo Espresso Capsules', 'Segafredo Decaffeinated Capsules',
                 'Milk Capsule', 'Equal Sugar', 'Brown Sugar', 'White Sugar',
                 'English Breakfast Tea', 'Chamomile Tea', 'Green Tea', 'Earl Grey Tea', 'Peppermint Tea'
             ],
             'General Items': [
                 'Coffee cup', 'Coffee cup (saucer)', 'Water glass', 'Wine glass', 'Spoon',
-                'DND Card', 'Garbage Bag (Big)', 'Garbage Bag (Small)', 'Beach Bag'
+                'DND Card', 'Garbage Bag (Big)', 'Garbage Bag (Small)', 'Beach Bag',
+                'Sponge', 'Steel Wool', 'Cotton Gloves'
             ],
             'Cleaning Equipment': [
                 'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'Metal Polish', 'Brasso'
             ],
             'Linen Items': [
                 'Bed sheet (Small)', 'Bed sheet (Large)', 'Duvet cover (Small)',
-                'Duvet cover (Large) – White Water villa', 'Pillow Protector (Small) (Soft)',
-                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) – White',
+                'Duvet cover (Large) 鈥� White Water villa', 'Pillow Protector (Small) (Soft)',
+                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) 鈥� White',
                 'Pillow cover (Large) (Firm)', 'Kimono L', 'Kimono M',
                 'Beach towel (Guest) (New Blue)', 'Bath towel', 'Hand towel',
                 'Face towel', 'Bath mat', 'Turndown mat', 'Rug'
             ]
         };
+
+        // Debug villa selection system
+        function debugVillaSystem() {
+            console.log('=== Villa Selection System Debug ===');
+            console.log('Villa buttons found:', document.querySelectorAll('.villa-btn').length);
+            console.log('Villa names mapping:', villaNames);
+            
+            document.querySelectorAll('.villa-btn').forEach((btn, index) => {
+                const dataVilla = btn.getAttribute('data-villa');
+                const textContent = btn.textContent.replace(/\s+/g, ' ').trim();
+                console.log(`Button ${index + 1}:`, {
+                    dataVilla: dataVilla,
+                    textContent: textContent,
+                    hasEventListener: btn.onclick !== null
+                });
+            });
+            
+            console.log('Selected villa container:', document.getElementById('selected-villa'));
+            console.log('Current selected villa:', selectedVilla);
+        }
 
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
@@ -968,12 +1011,18 @@
             AMENITIES_CATEGORIES = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
             updateAmenitiesArray();
             saveAmenitiesConfig(); // Save the updated categories immediately
-            
+
             loadAmenitiesConfig();
             initializeUI();
+            
+            // Debug villa system after initialization
+            setTimeout(() => {
+                debugVillaSystem();
+            }, 100);
+            
             console.log(`
         === OBLU SELECT Sangeli Amenities Manager ===
-        
+
         Features:
         - Password-protected admin panel (9999) with categorized amenities
         - Multiple sharing options (WhatsApp, Telegram, SMS, Email, Viber, Messenger, Twitter, LinkedIn)
@@ -981,7 +1030,7 @@
         - Selected items displayed at top with double-tap removal
         - Villa selection system with pantry options
         - Quick admin dashboard widget for real-time management
-        
+
         Current amenities count: ${AMENITIES.length}
         Categories: ${Object.keys(AMENITIES_CATEGORIES).join(', ')}
         `);
@@ -992,17 +1041,38 @@
             renderAmenities();
             updateCategoriesView();
             initializeSearchAndFilter();
-            
+            initializeVillaSelection();
+
             // Set up event listeners
             document.getElementById('copy-btn').addEventListener('click', copyToClipboard);
             document.getElementById('whatsapp-btn').addEventListener('click', shareToWhatsApp);
             document.getElementById('clear-btn').addEventListener('click', clearList);
-            
+        }
+
+        // Initialize villa selection
+        function initializeVillaSelection() {
             // Villa selection buttons
             document.querySelectorAll('.villa-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
-                    selectVilla(this.getAttribute('data-villa'));
+                    const villaType = this.getAttribute('data-villa');
+                    if (villaType) {
+                        selectVilla(villaType);
+                    } else {
+                        console.error('Villa button missing data-villa attribute:', this);
+                        showMessage('Error: Villa selection failed', 'error');
+                    }
                 });
+            });
+
+            // Ensure all villa buttons have proper data attributes
+            const villaButtons = document.querySelectorAll('.villa-btn');
+            const expectedVillas = ['water-villa-1st', 'water-villa-2nd', 'beach-villa-1st', 'beach-villa-2nd'];
+            
+            villaButtons.forEach((btn, index) => {
+                if (!btn.getAttribute('data-villa') && expectedVillas[index]) {
+                    btn.setAttribute('data-villa', expectedVillas[index]);
+                    console.log(`Fixed missing data-villa attribute for button ${index + 1}`);
+                }
             });
         }
 
@@ -1010,58 +1080,34 @@
         function initializeSearchAndFilter() {
             const searchInput = document.getElementById('search-input');
             const searchClear = document.getElementById('search-clear');
-            
+
             // Real-time search with debouncing
             searchInput.addEventListener('input', function() {
                 clearTimeout(searchTimeout);
                 const searchTerm = this.value.trim();
-                
+
                 // Show/hide clear button
                 if (searchTerm) {
                     searchClear.classList.add('show');
                 } else {
                     searchClear.classList.remove('show');
                 }
-                
+
                 // Debounce search to avoid excessive filtering
                 searchTimeout = setTimeout(() => {
                     performSearch(searchTerm);
                 }, 300);
             });
-            
+
             // Clear search when pressing Escape
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     clearSearch();
                 }
             });
-            
+
             // Generate category filter buttons
             renderCategoryFilters();
-        }
-
-        // Render category filter buttons
-        function renderCategoryFilters() {
-            const filterContainer = document.getElementById('filter-container');
-            
-            // Clear existing filters except "All Categories"
-            const allButton = filterContainer.querySelector('[data-category="all"]');
-            if (allButton) {
-                filterContainer.innerHTML = '';
-                filterContainer.appendChild(allButton);
-            } else {
-                filterContainer.innerHTML = '<button class="filter-btn active" data-category="all" onclick="filterByCategory(\'all\')">All Categories</button>';
-            }
-            
-            // Add category-specific filters
-            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
-                const filterBtn = document.createElement('button');
-                filterBtn.className = 'filter-btn';
-                filterBtn.textContent = categoryName;
-                filterBtn.setAttribute('data-category', categoryName);
-                filterBtn.onclick = () => filterByCategory(categoryName);
-                filterContainer.appendChild(filterBtn);
-            });
         }
 
         // Perform search functionality
@@ -1073,17 +1119,17 @@
         // Filter by category
         function filterByCategory(category) {
             currentCategoryFilter = category;
-            
+
             // Update filter button states
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
-            
+
             const targetButton = document.querySelector(`[data-category="${category}"]`);
             if (targetButton) {
                 targetButton.classList.add('active');
             }
-            
+
             applyFilters();
             showMessage(`Filtered by: ${category === 'all' ? 'All Categories' : category}`, 'success');
         }
@@ -1094,43 +1140,43 @@
             const categoryHeaders = document.querySelectorAll('.category-header');
             let visibleItemsCount = 0;
             let visibleCategoriesCount = 0;
-            
+
             // Remove existing no-results message
             const existingNoResults = document.querySelector('.no-results');
             if (existingNoResults) {
                 existingNoResults.remove();
             }
-            
+
             // First, hide all items and headers
             amenityButtons.forEach(btn => btn.classList.add('hidden'));
             categoryHeaders.forEach(header => header.classList.add('hidden'));
-            
+
             // Process each category
             Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
                 let categoryHasVisibleItems = false;
                 const categoryHeader = Array.from(categoryHeaders).find(header => 
                     header.textContent === categoryName
                 );
-                
+
                 // Check if category should be visible based on filter
                 const categoryVisible = currentCategoryFilter === 'all' || currentCategoryFilter === categoryName;
-                
+
                 if (categoryVisible) {
                     // Process items in this category
                     AMENITIES_CATEGORIES[categoryName].forEach(item => {
                         const itemButton = Array.from(amenityButtons).find(btn => 
                             btn.textContent === item
                         );
-                        
+
                         if (itemButton) {
                             const matchesSearch = !currentSearchTerm || 
                                 item.toLowerCase().includes(currentSearchTerm);
-                            
+
                             if (matchesSearch) {
                                 itemButton.classList.remove('hidden');
                                 categoryHasVisibleItems = true;
                                 visibleItemsCount++;
-                                
+
                                 // Add highlight animation for search results
                                 if (currentSearchTerm && item.toLowerCase().includes(currentSearchTerm)) {
                                     itemButton.classList.add('highlight');
@@ -1141,7 +1187,7 @@
                             }
                         }
                     });
-                    
+
                     // Show category header if it has visible items
                     if (categoryHasVisibleItems && categoryHeader) {
                         categoryHeader.classList.remove('hidden');
@@ -1149,7 +1195,7 @@
                     }
                 }
             });
-            
+
             // Show no results message if needed
             if (visibleItemsCount === 0) {
                 const amenitiesGrid = document.getElementById('amenities-grid');
@@ -1160,7 +1206,7 @@
                     'No amenities in this category';
                 amenitiesGrid.appendChild(noResultsDiv);
             }
-            
+
             // Update search statistics
             updateSearchStats(visibleItemsCount, visibleCategoriesCount);
         }
@@ -1170,9 +1216,9 @@
             const searchStats = document.getElementById('search-stats');
             const totalItems = AMENITIES.length;
             const totalCategories = Object.keys(AMENITIES_CATEGORIES).length;
-            
+
             let statsText = '';
-            
+
             if (currentSearchTerm && currentCategoryFilter !== 'all') {
                 statsText = `Found ${visibleItems} items in "${currentCategoryFilter}" matching "${currentSearchTerm}"`;
             } else if (currentSearchTerm) {
@@ -1182,9 +1228,9 @@
             } else {
                 statsText = `Showing all ${totalItems} amenities across ${totalCategories} categories`;
             }
-            
+
             searchStats.textContent = statsText;
-            
+
             // Add highlight class for active filters
             if (currentSearchTerm || currentCategoryFilter !== 'all') {
                 searchStats.classList.add('highlight');
@@ -1197,13 +1243,44 @@
         function clearSearch() {
             const searchInput = document.getElementById('search-input');
             const searchClear = document.getElementById('search-clear');
-            
+
             searchInput.value = '';
             searchClear.classList.remove('show');
             currentSearchTerm = '';
-            
+
             applyFilters();
             showMessage('Search cleared', 'success');
+        }
+
+        // Render category filter buttons
+        function renderCategoryFilters() {
+            const filterContainer = document.getElementById('filter-container');
+            if (!filterContainer) return;
+
+            // Keep the "All Categories" button and add category-specific filters
+            const allButton = filterContainer.querySelector('[data-category="all"]');
+            filterContainer.innerHTML = '';
+            
+            if (allButton) {
+                filterContainer.appendChild(allButton);
+            } else {
+                const allBtn = document.createElement('button');
+                allBtn.className = 'filter-btn active';
+                allBtn.setAttribute('data-category', 'all');
+                allBtn.textContent = 'All Categories';
+                allBtn.onclick = () => filterByCategory('all');
+                filterContainer.appendChild(allBtn);
+            }
+
+            // Add category filter buttons
+            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
+                const filterBtn = document.createElement('button');
+                filterBtn.className = 'filter-btn';
+                filterBtn.setAttribute('data-category', categoryName);
+                filterBtn.textContent = categoryName;
+                filterBtn.onclick = () => filterByCategory(categoryName);
+                filterContainer.appendChild(filterBtn);
+            });
         }
 
         // Quick filter shortcuts
@@ -1243,15 +1320,15 @@
         // Admin section navigation
         function showAdminSection(section) {
             currentAdminSection = section;
-            
+
             // Update navigation buttons
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(section + '-btn').classList.add('active');
-            
+
             // Show/hide sections
             document.getElementById('manage-section').style.display = section === 'manage' ? 'block' : 'none';
             document.getElementById('history-section').style.display = section === 'history' ? 'block' : 'none';
-            
+
             // Load history if history section is selected
             if (section === 'history') {
                 loadShareHistory();
@@ -1273,12 +1350,12 @@
         // Display history in the admin panel
         function displayHistory(history) {
             const historyContainer = document.getElementById('history-list');
-            
+
             if (history.length === 0) {
                 historyContainer.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No sharing history yet</p>';
                 return;
             }
-            
+
             historyContainer.innerHTML = history.map(item => `
                 <div class="history-item">
                     <div class="history-header">
@@ -1296,19 +1373,19 @@
             try {
                 const historyData = localStorage.getItem(STORAGE_KEYS.SHARE_HISTORY);
                 const history = historyData ? JSON.parse(historyData) : [];
-                
+
                 history.unshift({
                     villa_type: villaType,
                     amenities: amenities,
                     platform: platform,
                     shared_at: new Date().toISOString()
                 });
-                
+
                 // Keep only last 100 entries
                 if (history.length > 100) {
                     history.splice(100);
                 }
-                
+
                 localStorage.setItem(STORAGE_KEYS.SHARE_HISTORY, JSON.stringify(history));
             } catch (error) {
                 console.error('Error saving share history:', error);
@@ -1348,9 +1425,18 @@
                     amenityBtn.className = 'amenity-btn';
                     amenityBtn.textContent = amenity;
                     amenityBtn.onclick = () => toggleAmenity(amenity);
+
+                    // Apply light red styling for Segafredo capsules
+                    if (amenity.toLowerCase().includes('segafredo')) {
+                        amenityBtn.classList.add('light-red');
+                    }
+
                     amenitiesGrid.appendChild(amenityBtn);
                 });
             });
+
+            // Update amenity button states based on selected items
+            updateAmenityButtons();
 
             // Update filter buttons and apply current filters
             if (document.getElementById('filter-container')) {
@@ -1395,7 +1481,7 @@
         function updateFloatingButtons() {
             const floatingCopy = document.getElementById('floating-copy');
             const floatingWhatsApp = document.getElementById('floating-whatsapp');
-            
+
             if (selectedAmenities.length > 0) {
                 floatingCopy.classList.add('show');
                 floatingWhatsApp.classList.add('show');
@@ -1420,7 +1506,7 @@
                 const linesBefore = textBeforeCursor.split('\n');
                 const linesAfter = textAfterCursor.split('\n');
                 const currentLine = linesBefore[linesBefore.length - 1] + linesAfter[0];
-                
+
                 const lineContent = currentLine.trim();
                 if (lineContent && selectedAmenities.includes(lineContent)) {
                     removeAmenity(lineContent);
@@ -1442,19 +1528,39 @@
 
         // Villa selection
         function selectVilla(villaType) {
+            // Validate villa type
+            if (!villaType || !villaNames[villaType]) {
+                console.error('Invalid villa type:', villaType);
+                showMessage('Error: Invalid villa selection', 'error');
+                return;
+            }
+
             selectedVilla = villaType;
-            
+
             // Update villa button states
             document.querySelectorAll('.villa-btn').forEach(btn => {
                 btn.classList.remove('selected');
             });
-            document.querySelector(`[data-villa="${villaType}"]`).classList.add('selected');
             
+            const selectedButton = document.querySelector(`[data-villa="${villaType}"]`);
+            if (selectedButton) {
+                selectedButton.classList.add('selected');
+            } else {
+                console.error('Villa button not found for:', villaType);
+                showMessage('Error: Villa button not found', 'error');
+                return;
+            }
+
             // Update display
             const selectedVillaDiv = document.getElementById('selected-villa');
-            selectedVillaDiv.textContent = `Selected: ${villaNames[villaType]}`;
+            if (selectedVillaDiv) {
+                selectedVillaDiv.textContent = `Selected: ${villaNames[villaType]}`;
+            }
+            
             updateSelectedItemsDisplay();
             showMessage(`Selected ${villaNames[villaType]}`, 'success');
+            
+            console.log('Villa selected successfully:', villaType, villaNames[villaType]);
         }
 
         // Copy to Clipboard
@@ -1466,7 +1572,7 @@
 
             const villaInfo = selectedVilla ? `${villaNames[selectedVilla]}\n\n` : '';
             const textToCopy = villaInfo + selectedAmenities.join('\n');
-            
+
             // Try modern clipboard API first
             if (navigator.clipboard && window.isSecureContext) {
                 navigator.clipboard.writeText(textToCopy).then(() => {
@@ -1489,7 +1595,7 @@
             document.body.appendChild(textArea);
             textArea.focus();
             textArea.select();
-            
+
             try {
                 const successful = document.execCommand('copy');
                 if (successful) {
@@ -1500,7 +1606,7 @@
             } catch (err) {
                 showMessage('Please select and copy the text manually', 'error');
             }
-            
+
             document.body.removeChild(textArea);
         }
 
@@ -1515,10 +1621,10 @@
             const message = `${villaInfo}${selectedAmenities.join('\n')}`;
             const encodedMessage = encodeURIComponent(message);
             const whatsappURL = `https://wa.me/?text=${encodedMessage}`;
-            
+
             // Save to history
             saveShareHistoryLocal(selectedVilla ? villaNames[selectedVilla] : '', selectedAmenities, 'WhatsApp');
-            
+
             window.open(whatsappURL, '_blank');
             showMessage('Opening WhatsApp...', 'success');
         }
@@ -1529,7 +1635,7 @@
                 showMessage('No items to clear!', 'error');
                 return;
             }
-            
+
             selectedAmenities = [];
             updateSelectedItemsDisplay();
             updateAmenityButtons();
@@ -1560,7 +1666,7 @@
         function changeTheme(theme) {
             document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelector(`.theme-btn.${theme}`).classList.add('active');
-            
+
             const root = document.documentElement;
             switch(theme) {
                 case 'blue':
@@ -1575,7 +1681,7 @@
                 default:
                     root.style.setProperty('--primary-color', '#00cc00');
             }
-            
+
             showMessage(`Theme changed to ${theme}`, 'success');
         }
 
@@ -1585,7 +1691,7 @@
         function toggleAdmin() {
             const adminPassword = document.getElementById('admin-password');
             const adminContent = document.getElementById('admin-content');
-            
+
             if (!adminAuthenticated) {
                 if (adminPassword.classList.contains('show')) {
                     adminPassword.classList.remove('show');
@@ -1603,19 +1709,19 @@
         function authenticateAdmin() {
             const passwordInput = document.getElementById('admin-password-input');
             const password = passwordInput.value;
-            
+
             if (password === '9999') {
                 adminAuthenticated = true;
                 isAdminMode = true;
                 document.getElementById('admin-password').classList.remove('show');
                 document.getElementById('admin-content').classList.add('show');
                 document.getElementById('admin-nav').style.display = 'flex';
-                
+
                 document.getElementById('admin-edit-section').style.display = 'block';
                 document.getElementById('admin-item-section').style.display = 'block';
                 document.getElementById('admin-only-functions').style.display = 'block';
                 document.getElementById('admin-login-prompt').style.display = 'none';
-                
+
                 passwordInput.value = '';
                 updateCategoryManagement();
                 updateCategoriesView();
@@ -1633,12 +1739,12 @@
             document.getElementById('admin-content').classList.remove('show');
             document.getElementById('admin-password').classList.remove('show');
             document.getElementById('admin-nav').style.display = 'none';
-            
+
             document.getElementById('admin-edit-section').style.display = 'none';
             document.getElementById('admin-item-section').style.display = 'none';
             document.getElementById('admin-only-functions').style.display = 'none';
             document.getElementById('admin-login-prompt').style.display = 'block';
-            
+
             showMessage('Logged out from admin panel', 'success');
         }
 
@@ -1658,26 +1764,26 @@
         function updateCategoriesView() {
             const categoriesView = document.getElementById('categories-view');
             categoriesView.innerHTML = '';
-            
+
             Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'category-item';
                 categoryDiv.style.flexDirection = 'column';
                 categoryDiv.style.alignItems = 'flex-start';
                 categoryDiv.style.marginBottom = '10px';
-                
+
                 const categoryHeader = document.createElement('div');
                 categoryHeader.style.fontWeight = 'bold';
                 categoryHeader.style.color = '#00cc00';
                 categoryHeader.style.marginBottom = '5px';
                 categoryHeader.textContent = `${categoryName} (${AMENITIES_CATEGORIES[categoryName].length} items)`;
-                
+
                 const itemsList = document.createElement('div');
                 itemsList.style.fontSize = '12px';
                 itemsList.style.color = '#aaaaaa';
                 itemsList.style.marginLeft = '10px';
                 itemsList.textContent = AMENITIES_CATEGORIES[categoryName].join(', ');
-                
+
                 categoryDiv.appendChild(categoryHeader);
                 categoryDiv.appendChild(itemsList);
                 categoriesView.appendChild(categoryDiv);
@@ -1687,7 +1793,7 @@
         function updateCategoryList() {
             const categoryList = document.getElementById('category-list');
             categoryList.innerHTML = '';
-            
+
             Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.className = 'category-item';
@@ -1702,7 +1808,7 @@
         function updateCategorySelect() {
             const categorySelect = document.getElementById('category-select');
             categorySelect.innerHTML = '<option value="">Select category for new item</option>';
-            
+
             Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
                 const option = document.createElement('option');
                 option.value = categoryName;
@@ -1714,11 +1820,11 @@
         function updateItemsList() {
             const itemsList = document.getElementById('items-list');
             itemsList.innerHTML = '';
-            
+
             Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
                 const categoryDiv = document.createElement('div');
                 categoryDiv.innerHTML = `<h5 style="color: #00cc00; margin: 10px 0 5px 0;">${categoryName}</h5>`;
-                
+
                 AMENITIES_CATEGORIES[categoryName].forEach(item => {
                     const itemDiv = document.createElement('div');
                     itemDiv.className = 'category-item';
@@ -1728,7 +1834,7 @@
                     `;
                     categoryDiv.appendChild(itemDiv);
                 });
-                
+
                 itemsList.appendChild(categoryDiv);
             });
         }
@@ -1736,17 +1842,17 @@
         function addNewCategory() {
             const newCategoryInput = document.getElementById('new-category');
             const categoryName = newCategoryInput.value.trim();
-            
+
             if (!categoryName) {
                 showMessage('Please enter a category name', 'error');
                 return;
             }
-            
+
             if (AMENITIES_CATEGORIES.hasOwnProperty(categoryName)) {
                 showMessage('Category already exists', 'error');
                 return;
             }
-            
+
             AMENITIES_CATEGORIES[categoryName] = [];
             updateAmenitiesArray();
             saveAmenitiesConfig(); // Auto-save configuration
@@ -1864,14 +1970,14 @@
                 const index = AMENITIES_CATEGORIES[categoryName].indexOf(item);
                 if (index > -1) {
                     AMENITIES_CATEGORIES[categoryName].splice(index, 1);
-                    
+
                     // Also remove from selected items if it was selected
                     const selectedIndex = selectedAmenities.indexOf(item);
                     if (selectedIndex > -1) {
                         selectedAmenities.splice(selectedIndex, 1);
                         updateSelectedItemsDisplay();
                     }
-                    
+
                     updateAmenitiesArray();
                     saveAmenitiesConfig(); // Auto-save configuration
                     renderAmenities();
@@ -1896,24 +2002,24 @@
 
         function importAmenities() {
             const importText = document.getElementById('import-amenities').value.trim();
-            
+
             if (!importText) {
                 showMessage('Please paste amenities list to import', 'error');
                 return;
             }
-            
+
             const newAmenities = importText.split('\n').map(item => item.trim()).filter(item => item);
-            
+
             if (newAmenities.length === 0) {
                 showMessage('No valid amenities found to import', 'error');
                 return;
             }
-            
+
             // Add to "General Items" category
             if (!AMENITIES_CATEGORIES['General Items']) {
                 AMENITIES_CATEGORIES['General Items'] = [];
             }
-            
+
             let addedCount = 0;
             newAmenities.forEach(amenity => {
                 let alreadyExists = false;
@@ -1922,13 +2028,13 @@
                         alreadyExists = true;
                     }
                 });
-                
+
                 if (!alreadyExists) {
                     AMENITIES_CATEGORIES['General Items'].push(amenity);
                     addedCount++;
                 }
             });
-            
+
             updateAmenitiesArray();
             saveAmenitiesConfig(); // Auto-save configuration
             renderAmenities();
