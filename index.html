@@ -2,737 +2,441 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>OBLU SELECT Sangeli - Housekeeping Amenities</title>
+    
+    <!-- ============================================
+    FORCE CACHE CLEAR - DO NOT REMOVE
+    ============================================ -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- ============================================
+    PWA META TAGS
+    ============================================ -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#00cc00">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Sangeli HK">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="apple-touch-startup-image" href="icon-512.png">
+    
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background-color: #0a0a0a; color: #00cc00; min-height: 100vh; overflow-x: hidden; position: relative; font-size: 13px; }
+        .header { text-align: center; padding: 15px 5px; background: linear-gradient(45deg, #1a1a1a, #004400); border-bottom: 2px solid #00cc00; }
+        .logo { font-size: 18px; font-weight: bold; color: #00cc00; margin-bottom: 2px; }
+        .subtitle { font-size: 11px; color: #cccccc; }
+        .version-badge { text-align: center; color: #335533; font-size: 9px; padding: 3px 0; letter-spacing: 1px; }
+        .container { max-width: 480px; margin: 0 auto; padding: 10px; }
+        .villa-section { margin-bottom: 12px; }
+        .section-title { font-size: 13px; font-weight: bold; margin-bottom: 6px; text-align: center; color: #00cc00; text-transform: uppercase; letter-spacing: 0.5px; }
+        .villa-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin-bottom: 8px; }
+        .villa-btn { background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 2px solid #00cc00; padding: 4px; border-radius: 6px; cursor: pointer; transition: all 0.3s ease; font-size: 11px; text-align: center; height: 42px; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; }
+        .villa-btn:hover { background: rgba(0, 204, 0, 0.05); box-shadow: 0 0 10px rgba(0, 204, 0, 0.3); }
+        .villa-btn.selected { background: rgba(0, 204, 0, 0.25); box-shadow: 0 0 12px rgba(0, 204, 0, 0.6); color: #ffffff; }
+        .selected-villa { text-align: center; color: #00ccff; font-size: 11px; margin-bottom: 8px; height: 16px; font-weight: bold; }
+        .selected-items { margin-bottom: 12px; }
+        .selected-textarea { width: 100%; height: 110px; background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 2px solid #00cc00; border-radius: 6px; padding: 6px; font-size: 11px; resize: vertical; line-height: 1.3; }
+        
+        .notes-section { margin-bottom: 12px; }
+        .notes-input { width: 100%; background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 2px solid #00cc00; border-radius: 6px; padding: 8px 10px; font-size: 12px; height: 36px; }
+        .notes-input::placeholder { color: #004400; }
+        
+        .note-suggestions-section { margin-bottom: 12px; }
+        .suggestions-container { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; max-height: 120px; overflow-y: auto; padding: 2px; }
+        .suggestions-container::-webkit-scrollbar { width: 4px; }
+        .suggestions-container::-webkit-scrollbar-track { background: #0a0a0a; }
+        .suggestions-container::-webkit-scrollbar-thumb { background: #00cc00; border-radius: 2px; }
+        .suggestion-chip { background: rgba(0, 20, 0, 0.6); color: #88ff88; border: 1px solid #00cc00; padding: 3px 8px; border-radius: 12px; font-size: 10px; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 4px; white-space: nowrap; }
+        .suggestion-chip:hover { background: rgba(0, 204, 0, 0.2); box-shadow: 0 0 10px rgba(0, 204, 0, 0.2); transform: scale(1.02); }
+        .suggestion-chip .remove-chip { color: #ff6666; font-size: 12px; cursor: pointer; margin-left: 2px; }
+        .suggestion-chip .remove-chip:hover { color: #ff0000; }
+        .add-suggestion-row { display: flex; gap: 6px; margin-top: 6px; }
+        .add-suggestion-input { flex: 1; background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 1px solid #00cc00; border-radius: 4px; padding: 4px 8px; font-size: 11px; height: 28px; }
+        .add-suggestion-input:focus { outline: none; border-color: #00ff00; }
+        .add-suggestion-btn { background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 1px solid #00cc00; padding: 2px 12px; border-radius: 4px; cursor: pointer; font-size: 11px; height: 28px; display: flex; align-items: center; justify-content: center; }
+        .add-suggestion-btn:hover { background: rgba(0, 204, 0, 0.1); }
+        
+        .search-filter-section { margin-bottom: 12px; background: rgba(0, 20, 0, 0.3); border: 1px solid #00cc00; border-radius: 6px; padding: 10px; }
+        .search-container { position: relative; margin-bottom: 8px; display: flex; gap: 6px; }
+        .search-input { flex: 1; background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 2px solid #00cc00; border-radius: 5px; padding: 8px 30px 8px 10px; font-size: 12px; height: 36px; }
+        .search-clear { position: absolute; right: 54px; top: 50%; transform: translateY(-50%); background: none; border: none; color: #00cc00; cursor: pointer; font-size: 16px; display: none; z-index: 5; }
+        .search-clear.show { display: block; }
+        
+        .sync-btn { background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 2px solid #00cc00; width: 42px; height: 36px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; transition: all 0.2s ease; }
+        .sync-btn:active { background: rgba(0, 204, 0, 0.2); transform: scale(0.95); }
+        .sync-btn.spinning { animation: spin 0.8s linear infinite; pointer-events: none; border-color: #00ccff; color: #00ccff; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #0a0a0a;
-            color: #00cc00;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(45deg, #1a1a1a, #004400);
-            border-bottom: 2px solid #00cc00;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: #00cc00;
-            margin-bottom: 5px;
-        }
-
-        .subtitle {
-            font-size: 14px;
-            color: #cccccc;
-            margin-bottom: 15px;
-        }
-
-        /* Theme Selector */
-        .theme-selector {
+        .filter-container { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 4px; justify-content: center; }
+        .filter-btn { background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 1px solid #00cc00; padding: 4px 8px; border-radius: 12px; cursor: pointer; font-size: 11px; }
+        .filter-btn.active { background: rgba(0, 204, 0, 0.25); color: #ffffff; box-shadow: 0 0 10px rgba(0, 204, 0, 0.4); }
+        .search-stats { font-size: 10px; color: #888888; text-align: center; margin-top: 6px; }
+        
+        .amenities-section { margin-bottom: 12px; }
+        .amenities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-bottom: 10px; }
+        .amenity-btn.hidden, .category-header.hidden { display: none; }
+        .no-results { grid-column: span 3; text-align: center; color: #888888; padding: 20px 10px; font-style: italic; font-size: 12px; }
+        .category-header { grid-column: span 3; background: rgba(0, 204, 0, 0.15); color: #00cc00; padding: 4px; text-align: center; font-weight: bold; font-size: 11px; border-radius: 4px; margin: 6px 0 3px 0; letter-spacing: 0.5px; }
+        .amenity-btn { background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 1px solid #00cc00; padding: 3px 2px; border-radius: 5px; cursor: pointer; font-size: 11px; text-align: center; height: 36px; display: flex; align-items: center; justify-content: center; overflow: hidden; word-break: break-word; line-height: 1.1; }
+        .amenity-btn.selected { background: rgba(0, 204, 0, 0.25); color: #ffffff; box-shadow: 0 0 10px rgba(0, 204, 0, 0.4); }
+        .amenity-btn.light-red { background-color: rgba(255, 102, 102, 0.15); border-color: #ff6666; }
+        .amenity-btn.light-red.selected { background-color: rgba(255, 102, 102, 0.35); color: #ffffff; }
+        
+        .floating-buttons { position: fixed; bottom: 15px; z-index: 1000; display: none; }
+        .floating-buttons.show { display: block; }
+        .floating-copy { left: 15px; } .floating-whatsapp { right: 15px; }
+        .floating-btn { width: 46px; height: 46px; border-radius: 50%; background: rgba(0, 204, 0, 0.9); color: #ffffff; border: 2px solid #00cc00; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 3px 12px rgba(0, 204, 0, 0.4); }
+        
+        .share-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .action-buttons { display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 12px; }
+        .copy-btn, .whatsapp-btn, .clear-btn { background: rgba(0, 0, 0, 0.8); color: #00cc00; border: 2px solid #00cc00; padding: 8px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: bold; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .copy-btn:hover, .whatsapp-btn:hover { background: rgba(0, 204, 0, 0.1); box-shadow: 0 0 10px rgba(0, 204, 0, 0.3); }
+        .clear-btn { color: #ff6666; border-color: #ff6666; }
+        .clear-btn:hover { background: rgba(255, 102, 102, 0.05); box-shadow: 0 0 10px rgba(255, 102, 102, 0.3); }
+        
+        .admin-panel { background: rgba(0, 20, 0, 0.95); border: 2px solid #00ff00; border-radius: 8px; padding: 12px; margin: 10px 0; }
+        .admin-toggle { background: rgba(0, 0, 0, 0.8); color: #00ff00; border: 2px solid #00ff00; padding: 6px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: bold; width: 100%; margin-bottom: 10px; height: 36px; display: flex; align-items: center; justify-content: center; }
+        .admin-password, .admin-content { display: none; }
+        .admin-password.show, .admin-content.show { display: block; }
+        .admin-input { width: 100%; background: rgba(0, 0, 0, 0.8); color: #00ff00; border: 1px solid #00ff00; padding: 8px; border-radius: 5px; margin-bottom: 8px; font-size: 12px; height: 34px; }
+        .admin-btn { background: rgba(0, 0, 0, 0.8); color: #00ff00; border: 1px solid #00ff00; padding: 6px 12px; border-radius: 5px; cursor: pointer; margin: 3px; font-size: 11px; }
+        .admin-section { border: 1px solid #555555; border-radius: 4px; padding: 8px; margin-bottom: 10px; background-color: #1a1a1a; }
+        .admin-section h4 { color: #cccccc; font-size: 12px; margin-bottom: 8px; border-bottom: 1px solid #444444; padding-bottom: 4px; }
+        .category-item { display: flex; justify-content: space-between; align-items: center; padding: 4px; margin: 4px 0; background-color: #222222; border-radius: 3px; font-size: 11px; }
+        .remove-btn { background-color: #660000; color: #ff6666; border: 1px solid #ff6666; padding: 1px 4px; border-radius: 3px; cursor: pointer; font-size: 10px; }
+        .admin-nav { display: none; gap: 8px; margin: 10px 0; border-bottom: 2px solid #00ff00; padding-bottom: 8px; }
+        .nav-btn { background: rgba(0, 0, 0, 0.8); color: #00ff00; border: 1px solid #00ff00; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-size: 11px; }
+        .nav-btn.active { background: rgba(0, 255, 0, 0.15); box-shadow: 0 0 10px rgba(0, 255, 0, 0.5); }
+        .history-container { max-height: 300px; overflow-y: auto; border: 1px solid #00ff00; border-radius: 5px; background: rgba(0, 0, 0, 0.3); margin-top: 8px; }
+        .history-item { border-bottom: 1px solid rgba(0, 255, 0, 0.2); padding: 10px; background: rgba(0, 0, 0, 0.5); font-size: 11px; }
+        .history-controls { display: flex; gap: 8px; margin-bottom: 10px; }
+        .admin-btn.danger { background: rgba(255, 0, 0, 0.15); border-color: #ff6666; color: #ff6666; }
+        
+        .message { position: fixed; top: -60px; left: 50%; transform: translate(-50%, 0) scale(0.8); padding: 8px 16px; border-radius: 6px; font-weight: bold; z-index: 9999; opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 4px 12px rgba(0,0,0,0.6); white-space: nowrap; font-size: 12px; }
+        .message.show { opacity: 1; top: 15px; transform: translate(-50%, 0) scale(1); }
+        .message.success { background-color: #004400; color: #00ff00; border: 1px solid #00ff00; }
+        .message.error { background-color: #440000; color: #ff6666; border: 1px solid #ff6666; }
+        
+        /* ============================================
+        DROPDOWN STYLES
+        ============================================ */
+        .header-actions {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .theme-btn {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .theme-btn.green { background: #00cc00; }
-        .theme-btn.blue { background: #0066ff; }
-        .theme-btn.purple { background: #cc00cc; }
-        .theme-btn.orange { background: #ff6600; }
-        .theme-btn.active { border-color: #ffffff; transform: scale(1.2); }
-
-        /* Container */
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Villa Selection */
-        .villa-section {
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            text-align: center;
-            color: #00cc00;
-        }
-
-        .villa-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .villa-btn {
-            background: rgba(0, 0, 0, 0.8);
-            color: #00cc00;
-            border: 2px solid #00cc00;
-            padding: 16px 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 13px;
-            text-align: center;
-            min-height: 60px;
-        }
-
-        .villa-btn:hover {
-            background: rgba(0, 204, 0, 0.1);
-            box-shadow: 0 0 15px rgba(0, 204, 0, 0.5);
-        }
-
-        .villa-btn.selected {
-            background: rgba(0, 204, 0, 0.3);
-            box-shadow: 0 0 20px rgba(0, 204, 0, 0.8);
-        }
-
-        .selected-villa {
-            text-align: center;
-            color: #00ccff;
-            font-size: 12px;
-            margin-bottom: 15px;
-            min-height: 20px;
-        }
-
-        /* Selected Items Display */
-        .selected-items {
-            margin-bottom: 20px;
-        }
-
-        .selected-textarea {
-            width: 100%;
-            height: 120px;
-            background: rgba(0, 0, 0, 0.8);
-            color: #00cc00;
-            border: 2px solid #00cc00;
-            border-radius: 8px;
-            padding: 10px;
-            font-size: 12px;
-            resize: vertical;
-            font-family: Arial, sans-serif;
-        }
-
-        .selected-textarea::placeholder {
-            color: #666666;
-        }
-
-        /* Search and Filter Section */
-        .search-filter-section {
-            margin-bottom: 20px;
-            background: rgba(0, 20, 0, 0.3);
-            border: 1px solid #00cc00;
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .search-container {
-            position: relative;
-            margin-bottom: 15px;
-        }
-
-        .search-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            color: #00cc00;
-            border: 2px solid #00cc00;
-            border-radius: 6px;
-            padding: 12px 40px 12px 12px;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            outline: none;
-            box-shadow: 0 0 15px rgba(0, 204, 0, 0.5);
-            border-color: #00ff00;
-        }
-
-        .search-input::placeholder {
-            color: #666666;
-        }
-
-        .search-clear {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #00cc00;
-            cursor: pointer;
-            font-size: 18px;
-            width: 30px;
-            height: 30px;
-            display: none;
             align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .search-clear:hover {
-            background: rgba(0, 204, 0, 0.2);
-        }
-
-        .search-clear.show {
-            display: flex;
-        }
-
-        .filter-container {
-            display: flex;
-            flex-wrap: wrap;
             gap: 8px;
+            margin-top: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .dropdown-container {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-btn {
+            background: #00cc00;
+            color: #0a0a0a;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0,204,0,0.6);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .dropdown-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0,204,0,0.8);
+        }
+        
+        .dropdown-btn .arrow {
+            transition: transform 0.3s ease;
+            font-size: 10px;
+        }
+        
+        .dropdown-btn .arrow.open {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-btn.danger {
+            background: #440000;
+            color: #ff6666;
+            border: 1px solid #ff6666;
+            box-shadow: 0 0 10px rgba(255,68,68,0.3);
+        }
+        
+        .dropdown-btn.danger:hover {
+            box-shadow: 0 0 20px rgba(255,68,68,0.5);
+        }
+        
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 110%;
+            right: 0;
+            background: #1a1a1a;
+            border: 1px solid #00cc00;
+            border-radius: 10px;
+            min-width: 200px;
+            padding: 6px;
+            z-index: 1000;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.8);
+            animation: slideDown 0.3s ease;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .dropdown-menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #cccccc;
+            font-size: 12px;
+            border: none;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+        }
+        
+        .dropdown-menu-item:hover {
+            background: rgba(0, 204, 0, 0.1);
+            color: #ffffff;
+        }
+        
+        .dropdown-menu-item.danger {
+            color: #ff6666;
+        }
+        
+        .dropdown-menu-item.danger:hover {
+            background: rgba(255, 68, 68, 0.15);
+        }
+        
+        .dropdown-menu-item .icon {
+            font-size: 16px;
+        }
+        
+        .dropdown-divider {
+            border-top: 1px solid #2a2a2a;
+            margin: 4px 0;
+        }
+        
+        .uninstall-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 999999;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .uninstall-modal.show {
+            display: flex;
+        }
+        .uninstall-modal-content {
+            background: #1a1a1a;
+            border: 2px solid #ff6666;
+            border-radius: 16px;
+            padding: 30px 20px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        .uninstall-modal-content h3 {
+            color: #ff6666;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        .uninstall-modal-content p {
+            color: #cccccc;
+            font-size: 14px;
+            line-height: 1.6;
             margin-bottom: 10px;
         }
-
-        .filter-btn {
-            background: rgba(0, 0, 0, 0.8);
-            color: #00cc00;
-            border: 1px solid #00cc00;
-            padding: 8px 12px;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 12px;
-            white-space: nowrap;
+        .uninstall-modal-content .step {
+            background: #0a0a0a;
+            border: 1px solid #442222;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 8px 0;
+            text-align: left;
+            color: #ff8888;
+            font-size: 13px;
         }
-
-        .filter-btn:hover {
-            background: rgba(0, 204, 0, 0.1);
-            box-shadow: 0 0 10px rgba(0, 204, 0, 0.3);
+        .uninstall-modal-content .step strong {
+            color: #ff6666;
         }
-
-        .filter-btn.active {
-            background: rgba(0, 204, 0, 0.3);
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(0, 204, 0, 0.6);
+        .uninstall-modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
-
-        .search-stats {
-            font-size: 12px;
-            color: #888888;
-            text-align: center;
-            margin-top: 10px;
-        }
-
-        .search-stats.highlight {
-            color: #00cc00;
-            font-weight: bold;
-        }
-
-        /* Amenities Grid */
-        .amenities-section {
-            margin-bottom: 20px;
-        }
-
-        .amenities-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 6px;
-            margin-bottom: 20px;
-        }
-
-        /* Search highlighting */
-        .amenity-btn.highlight {
-            background: rgba(255, 255, 0, 0.2);
-            border-color: #ffff00;
-            animation: searchHighlight 1.5s ease-in-out;
-        }
-
-        @keyframes searchHighlight {
-            0% { background: rgba(255, 255, 0, 0.4); }
-            50% { background: rgba(255, 255, 0, 0.2); }
-            100% { background: rgba(255, 255, 0, 0.1); }
-        }
-
-        .amenity-btn.hidden {
-            display: none;
-        }
-
-        .category-header.hidden {
-            display: none;
-        }
-
-        .no-results {
-            grid-column: span 3;
-            text-align: center;
-            color: #888888;
-            padding: 40px 20px;
-            font-style: italic;
-        }
-
-        .category-header {
-            grid-column: span 3;
-            background: rgba(0, 204, 0, 0.2);
-            color: #00cc00;
-            padding: 8px;
-            text-align: center;
+        .uninstall-modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: none;
             font-weight: bold;
             font-size: 13px;
-            border-radius: 5px;
-            margin: 10px 0 5px 0;
-        }
-
-        .amenity-btn {
-            background: rgba(0, 0, 0, 0.8);
-            color: #00cc00;
-            border: 1px solid #00cc00;
-            padding: 16px 10px;
-            border-radius: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 12px;
-            text-align: center;
-            line-height: 1.3;
-            min-height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-
-        .amenity-btn:hover {
-            background: rgba(0, 204, 0, 0.1);
-            box-shadow: 0 0 10px rgba(0, 204, 0, 0.3);
-        }
-
-        .amenity-btn.selected {
-            background: rgba(0, 204, 0, 0.3);
-            border-color: #00cc00;
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(0, 204, 0, 0.6);
-        }
-
-        /* Added styling for Segafredo capsules */
-        .amenity-btn.light-red {
-            background-color: rgba(255, 102, 102, 0.2); /* Light red background */
-            border-color: #ff6666; /* Red border */
-        }
-        .amenity-btn.light-red:hover {
-            background-color: rgba(255, 102, 102, 0.3);
-            box-shadow: 0 0 10px rgba(255, 102, 102, 0.4);
-        }
-        .amenity-btn.light-red.selected {
-            background-color: rgba(255, 102, 102, 0.4);
-            border-color: #ff6666;
-            color: #ffffff;
-            box-shadow: 0 0 15px rgba(255, 102, 102, 0.6);
-        }
-
-
-        /* Floating Action Buttons */
-        .floating-buttons {
-            position: fixed;
-            bottom: 20px;
-            z-index: 1000;
-            display: none;
-        }
-
-        .floating-buttons.show {
-            display: block;
-        }
-
-        .floating-copy {
-            left: 20px;
-        }
-
-        .floating-whatsapp {
-            right: 20px;
-        }
-
-        .floating-btn {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: rgba(0, 204, 0, 0.9);
-            color: #ffffff;
-            border: 2px solid #00cc00;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0, 204, 0, 0.4);
-            transition: all 0.3s ease;
-            animation: pulse 2s infinite;
-        }
-
-        .floating-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 25px rgba(0, 204, 0, 0.6);
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 4px 20px rgba(0, 204, 0, 0.4); }
-            50% { box-shadow: 0 4px 30px rgba(0, 204, 0, 0.7); }
-            100% { box-shadow: 0 4px 20px rgba(0, 204, 0, 0.4); }
-        }
-
-        /* Action Buttons */
-        .share-buttons {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .action-buttons {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .copy-btn, .whatsapp-btn, .clear-btn {
-            background: rgba(0, 0, 0, 0.8);
-            color: #00cc00;
-            border: 2px solid #00cc00;
-            padding: 18px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            font-weight: bold;
-            min-height: 55px;
-        }
-
-        .copy-btn:hover, .whatsapp-btn:hover {
-            background: rgba(0, 204, 0, 0.2);
-            box-shadow: 0 0 15px rgba(0, 204, 0, 0.5);
-        }
-
-        .clear-btn {
-            color: #ff6666;
-            border-color: #ff6666;
-        }
-
-        .clear-btn:hover {
-            background: rgba(255, 102, 102, 0.1);
-            box-shadow: 0 0 15px rgba(255, 102, 102, 0.5);
-        }
-
-        /* Admin Panel */
-        .admin-panel {
-            background: rgba(0, 20, 0, 0.95);
-            border: 2px solid #00ff00;
-            border-radius: 10px;
-            padding: 20px;
-            margin: 20px 0;
-            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
-        }
-
-        .admin-toggle {
-            background: rgba(0, 0, 0, 0.8);
-            color: #00ff00;
-            border: 2px solid #00ff00;
-            padding: 12px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: bold;
-            width: 100%;
-            margin-bottom: 15px;
-            transition: all 0.3s ease;
-        }
-
-        .admin-toggle:hover {
-            background: rgba(0, 255, 0, 0.1);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
-        }
-
-        .admin-password, .admin-content {
-            display: none;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-        }
-
-        .admin-password.show, .admin-content.show {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .admin-input {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .admin-btn {
-            background: rgba(0, 0, 0, 0.8);
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 5px;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .admin-btn:hover {
-            background: rgba(0, 255, 0, 0.1);
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-
-        .admin-section {
-            border: 1px solid #555555;
-            border-radius: 4px;
-            padding: 10px;
-            margin-bottom: 15px;
-            background-color: #1a1a1a;
-        }
-
-        .admin-section h4 {
-            color: #cccccc;
-            font-size: 14px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #444444;
-            padding-bottom: 5px;
-        }
-
-        .category-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5px;
-            margin: 5px 0;
-            background-color: #222222;
-            border-radius: 3px;
-        }
-
-        .remove-btn {
-            background-color: #660000;
-            color: #ff6666;
-            border: 1px solid #ff6666;
-            padding: 2px 6px;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-
-        .remove-btn:hover {
-            background-color: #ff6666;
-            color: #000000;
-        }
-
-        /* Admin Navigation */
-        .admin-nav {
-            display: none;
-            gap: 10px;
-            margin: 15px 0;
-            border-bottom: 2px solid #00ff00;
-            padding-bottom: 10px;
-        }
-
-        .nav-btn {
-            background: rgba(0, 0, 0, 0.8);
-            color: #00ff00;
-            border: 1px solid #00ff00;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s ease;
-        }
-
-        .nav-btn:hover {
-            background: rgba(0, 255, 0, 0.1);
-            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-        }
-
-        .nav-btn.active {
-            background: rgba(0, 255, 0, 0.2);
-            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
-        }
-
-        /* History Styles */
-        .history-container {
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #00ff00;
-            border-radius: 5px;
-            background: rgba(0, 0, 0, 0.3);
-            margin-top: 10px;
-        }
-
-        .history-item {
-            border-bottom: 1px solid rgba(0, 255, 0, 0.3);
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .history-item:last-child {
-            border-bottom: none;
-        }
-
-        .history-header {
-            color: #00ff00;
-            font-weight: bold;
-            margin-bottom: 5px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .history-villa {
-            color: #00ccff;
-            font-size: 14px;
-            margin-bottom: 8px;
-        }
-
-        .history-amenities {
-            color: #cccccc;
-            font-size: 12px;
-            line-height: 1.4;
-        }
-
-        .history-controls {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .admin-btn.danger {
-            background: rgba(255, 0, 0, 0.2);
-            border-color: #ff6666;
-            color: #ff6666;
-        }
-
-        .admin-btn.danger:hover {
-            background: rgba(255, 0, 0, 0.3);
-            box-shadow: 0 0 10px rgba(255, 102, 102, 0.5);
-        }
-
-        /* Messages */
-        .message {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: bold;
-            z-index: 1000;
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .message.show {
-            opacity: 1;
-            top: 30px;
-        }
-
-        .message.success {
-            background-color: #004400;
-            color: #00ff00;
-            border: 1px solid #00ff00;
-        }
-
-        .message.error {
-            background-color: #440000;
+        .uninstall-modal-btn.danger {
+            background: #660000;
             color: #ff6666;
             border: 1px solid #ff6666;
         }
-
-        /* Mobile Responsive */
-        @media (max-width: 480px) {
-            .villa-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .villa-btn {
-                padding: 14px 10px;
-                font-size: 12px;
-                min-height: 55px;
-            }
-
-            .amenities-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 6px;
-            }
-
-            .amenity-btn {
-                padding: 14px 8px;
-                font-size: 11px;
-                min-height: 45px;
-            }
-
-            .category-header {
-                grid-column: span 3;
-                font-size: 14px;
-                padding: 10px;
-            }
-
-            .copy-btn, .whatsapp-btn, .clear-btn {
-                padding: 16px 12px;
-                font-size: 15px;
-                min-height: 50px;
-            }
-
-            .action-buttons {
-                grid-template-columns: 1fr;
-            }
-
-            .clear-btn {
-                grid-column: span 1;
-            }
+        .uninstall-modal-btn.danger:hover {
+            background: #880000;
+        }
+        .uninstall-modal-btn.secondary {
+            background: #1a1a1a;
+            color: #888888;
+            border: 1px solid #444444;
+        }
+        .uninstall-modal-btn.secondary:hover {
+            border-color: #888888;
+        }
+        .uninstall-modal-btn.success {
+            background: #004400;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+        }
+        .uninstall-modal-btn.success:hover {
+            background: #005500;
+        }
+        
+        @media (max-width: 360px) {
+            .amenity-btn { font-size: 10px; height: 34px; }
+            .villa-btn { font-size: 10px; height: 38px; }
+            .filter-btn { font-size: 10px; padding: 3px 6px; }
+            .suggestion-chip { font-size: 9px; padding: 2px 6px; }
+            .dropdown-btn { font-size: 10px; padding: 4px 10px; }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <div class="header">
         <div class="logo">🏝️ OBLU SELECT Sangeli</div>
-        <div class="subtitle">Housekeeping Amenities Manager</div>
-
-        <!-- Theme Selector -->
-        <div class="theme-selector">
-            <div class="theme-btn green active" onclick="changeTheme('green')"></div>
-            <div class="theme-btn blue" onclick="changeTheme('blue')"></div>
-            <div class="theme-btn purple" onclick="changeTheme('purple')"></div>
-            <div class="theme-btn orange" onclick="changeTheme('orange')"></div>
+        <div class="subtitle">Horizontal Matrix Sheet System</div>
+        <div class="version-badge">v4.0.1 | 2026-07-20</div>
+        
+        <!-- ============================================
+        HEADER ACTIONS WITH DROPDOWN
+        ============================================ -->
+        <div class="header-actions">
+            <!-- Install Button -->
+            <button id="universal-install-btn" style="display:none; background: #00cc00; color: #0a0a0a; border: none; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 11px; cursor: pointer; box-shadow: 0 0 10px rgba(0,204,0,0.6);">
+                📥 Install
+            </button>
+            
+            <!-- Dropdown Container -->
+            <div class="dropdown-container">
+                <button class="dropdown-btn danger" id="dropdownToggle" onclick="toggleDropdown(event)">
+                    🧹 Clear Cache
+                    <span class="arrow" id="dropdownArrow">▼</span>
+                </button>
+                
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <button class="dropdown-menu-item" onclick="clearCache()">
+                        <span class="icon">🗑️</span>
+                        Clear App Cache
+                    </button>
+                    <button class="dropdown-menu-item" onclick="clearAllData()">
+                        <span class="icon">🧹</span>
+                        Clear All Data
+                    </button>
+                    <button class="dropdown-menu-item" onclick="resetToDefault()">
+                        <span class="icon">🔄</span>
+                        Reset to Default
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-menu-item danger" onclick="showUninstallModal()">
+                        <span class="icon">📱</span>
+                        Uninstall App
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Main Container -->
+    <!-- Uninstall Modal -->
+    <div class="uninstall-modal" id="uninstallModal">
+        <div class="uninstall-modal-content">
+            <h3>🗑️ Uninstall App</h3>
+            <p>To completely remove this app from your device:</p>
+            
+            <div class="step" id="ios-uninstall-step" style="display:none;">
+                <strong>🍏 iPhone / iPad:</strong><br>
+                1. Press and hold the app icon on your home screen<br>
+                2. Tap <strong>"Remove App"</strong><br>
+                3. Tap <strong>"Delete App"</strong> to confirm
+            </div>
+            
+            <div class="step" id="android-uninstall-step" style="display:none;">
+                <strong>🤖 Android:</strong><br>
+                1. Press and hold the app icon on your home screen<br>
+                2. Tap <strong>"Uninstall"</strong> or drag to "Uninstall"<br>
+                3. Tap <strong>"OK"</strong> to confirm
+            </div>
+            
+            <div class="step" id="browser-uninstall-step" style="display:none;">
+                <strong>🌐 Browser:</strong><br>
+                1. Go to <strong>Chrome DevTools</strong> (F12)<br>
+                2. Go to <strong>Application → Service Workers</strong><br>
+                3. Click <strong>"Unregister"</strong> for this site
+            </div>
+            
+            <p style="color:#888;font-size:12px;margin-top:10px;">
+                <strong>⚠️ Note:</strong> The app icon must be removed manually from your home screen.<br>
+                This will clear all app data from your browser.
+            </p>
+            
+            <div class="uninstall-modal-buttons">
+                <button class="uninstall-modal-btn danger" onclick="confirmUninstall()">
+                    🗑️ Clear App Data
+                </button>
+                <button class="uninstall-modal-btn secondary" onclick="closeUninstallModal()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
-        <!-- Villa Selection -->
         <div class="villa-section">
-            <div class="section-title">🏡 Select Villa & Pantry</div>
+            <div class="section-title">🏡 Select Villa Pantry Location</div>
             <div class="villa-grid">
                 <button class="villa-btn" data-villa="water-villa-1st">Water Villa<br>1st Pantry</button>
                 <button class="villa-btn" data-villa="water-villa-2nd">Water Villa<br>2nd Pantry</button>
@@ -742,1318 +446,1099 @@
             <div class="selected-villa" id="selected-villa"></div>
         </div>
 
-        <!-- Selected Items Display -->
         <div class="selected-items">
-            <div class="section-title">📝 Selected Items (Double-tap to remove)</div>
-            <textarea class="selected-textarea" id="selected-items" placeholder="Selected amenities will appear here..." readonly></textarea>
+            <div class="section-title">📝 Current Orders List</div>
+            <textarea class="selected-textarea" id="selected-items" placeholder="Selected items display automatically..." readonly></textarea>
         </div>
 
-        <!-- Search and Filter -->
+        <div class="notes-section">
+            <div class="section-title">✍️ Add Custom Notes / Remarks</div>
+            <input type="text" class="notes-input" id="custom-notes-input" placeholder="Type extra notes here (e.g., Extra ice, urgent)...">
+        </div>
+
+        <div class="note-suggestions-section">
+            <div class="section-title">💡 Quick Pantry Notes</div>
+            <div class="suggestions-container" id="suggestions-container"></div>
+            <div class="add-suggestion-row">
+                <input type="text" class="add-suggestion-input" id="new-suggestion-input" placeholder="Add custom note suggestion..." onkeypress="handleSuggestionKeyPress(event)">
+                <button class="add-suggestion-btn" onclick="addSuggestion()">➕ Add</button>
+            </div>
+        </div>
+
         <div class="search-filter-section">
-            <div class="section-title">🔍 Search & Filter Amenities</div>
-
+            <div class="section-title">🔍 Filter Heading Rows</div>
             <div class="search-container">
-                <input type="text" class="search-input" id="search-input" placeholder="Search amenities (e.g., towel, coffee, soap...)">
+                <input type="text" class="search-input" id="search-input" placeholder="Search items...">
                 <button class="search-clear" id="search-clear" onclick="clearSearch()">✕</button>
+                <button class="sync-btn" id="sync-btn" onclick="syncCloudDatabase()" title="Sync Live Database">🔄</button>
             </div>
-
             <div class="filter-container" id="filter-container">
-                <button class="filter-btn active" data-category="all" onclick="filterByCategory('all')">All Categories</button>
-                <!-- Category filters will be populated here -->
+                <button class="filter-btn active" data-category="all" onclick="filterByCategory('all')">All Columns</button>
             </div>
-
-            <div class="search-stats" id="search-stats">Showing all amenities</div>
+            <div class="search-stats" id="search-stats">0 Items Discovered</div>
         </div>
 
-        <!-- Amenities Selection -->
         <div class="amenities-section">
-            <div class="section-title">🛏️ Select Amenities</div>
-            <div class="amenities-grid" id="amenities-grid">
-                <!-- Amenities will be populated here -->
-            </div>
+            <div class="section-title">🛏️ Selection Interface</div>
+            <div class="amenities-grid" id="amenities-grid"></div>
         </div>
 
-        <!-- Action Buttons -->
         <div class="share-buttons">
             <button class="copy-btn" id="copy-btn">📋 Copy List</button>
-            <button class="whatsapp-btn" id="whatsapp-btn">📱 Share WhatsApp</button>
+            <button class="whatsapp-btn" id="whatsapp-btn">📱 Send WhatsApp</button>
         </div>
 
         <div class="action-buttons">
-            <button class="clear-btn" id="clear-btn">🗑️ Clear List</button>
+            <button class="clear-btn" id="clear-btn">🗑️ Clear Current Choices</button>
         </div>
 
-        <!-- Admin Panel -->
         <div class="admin-panel">
-            <button class="admin-toggle" onclick="toggleAdmin()">🔧 Admin Panel - Edit Amenities List</button>
-
-            <!-- Password Section -->
+            <button class="admin-toggle" onclick="toggleAdmin()">🔧 Admin Configuration - Modify Heading Grid</button>
             <div class="admin-password" id="admin-password">
-                <input type="password" class="admin-input" id="admin-password-input" placeholder="Enter admin password" onkeypress="handlePasswordKeyPress(event)">
-                <button class="admin-btn" onclick="authenticateAdmin()">🔑 Login</button>
+                <input type="password" class="admin-input" id="admin-password-input" placeholder="Enter security verification key" onkeypress="handlePasswordKeyPress(event)">
+                <button class="admin-btn" onclick="authenticateAdmin()">🔑 Access</button>
             </div>
-
-            <!-- Admin Navigation -->
             <div class="admin-nav" id="admin-nav">
-                <button onclick="showAdminSection('manage')" class="nav-btn active" id="manage-btn">Manage Amenities</button>
-                <button onclick="showAdminSection('history')" class="nav-btn" id="history-btn">Share History</button>
+                <button onclick="showAdminSection('manage')" class="nav-btn active" id="manage-btn">Grid Columns</button>
+                <button onclick="showAdminSection('history')" class="nav-btn" id="history-btn">Logged Logs</button>
+                <button onclick="showAdminSection('suggestions')" class="nav-btn" id="suggestions-btn">💡 Suggestions</button>
             </div>
-
-            <!-- Admin Content -->
             <div class="admin-content" id="admin-content">
-                <!-- Manage Amenities Section -->
                 <div id="manage-section" class="admin-tab-content">
-                    <!-- Current Categories View -->
                     <div class="admin-section">
-                        <h4>Current Categories & Items</h4>
+                        <h4>Current Header Mapping Layout</h4>
                         <div id="categories-view"></div>
                     </div>
-
-                    <!-- Category Management -->
                     <div class="admin-section" id="admin-edit-section" style="display: none;">
-                        <h4>Category Management (Admin Only)</h4>
-                        <input type="text" class="admin-input" id="new-category" placeholder="Add new category (e.g., Bathroom Items)">
-                        <button class="admin-btn" onclick="addNewCategory()">➕ Add Category</button>
+                        <h4>Column Structural Settings</h4>
+                        <input type="text" class="admin-input" id="new-category" placeholder="Add custom column heading title">
+                        <button class="admin-btn" onclick="addNewCategory()">➕ Expand Layout Column</button>
                         <div id="category-list"></div>
                     </div>
-
-                    <!-- Item Management -->
                     <div class="admin-section" id="admin-item-section" style="display: none;">
-                        <h4>Item Management (Admin Only)</h4>
-                        <select class="admin-input" id="category-select">
-                            <option value="">Select category for new item</option>
-                        </select>
-
-                        <!-- Single Item Add -->
-                        <input type="text" class="admin-input" id="new-item" placeholder="Add new item to selected category">
-                        <button class="admin-btn" onclick="addItemToCategory()">➕ Add Single Item</button>
-
-                        <!-- Bulk Item Add -->
-                        <textarea class="admin-input" id="bulk-items" placeholder="Add multiple items (one per line) to selected category" rows="4" style="margin-top: 10px;"></textarea>
-                        <button class="admin-btn" onclick="addBulkItemsToCategory()" style="background: rgba(0, 150, 0, 0.8); border-color: #00bb00;">➕ Add Multiple Items</button>
-
+                        <h4>Item Grid Management</h4>
+                        <select class="admin-input" id="category-select"><option value="">Choose vertical column heading</option></select>
+                        <input type="text" class="admin-input" id="new-item" placeholder="Add item beneath chosen heading">
+                        <button class="admin-btn" onclick="addItemToCategory()">➕ Add Singular Element</button>
+                        <textarea class="admin-input" id="bulk-items" placeholder="Append list elements (one line per entry)" rows="4" style="margin-top: 10px;"></textarea>
+                        <button class="admin-btn" onclick="addBulkItemsToCategory()">➕ Bulk Add Under Header</button>
                         <div id="items-list"></div>
                     </div>
-
-                    <!-- System Functions -->
                     <div class="admin-section">
-                        <h4>System Functions</h4>
-                        <button class="admin-btn" onclick="exportAmenities()">📥 Export List</button>
+                        <h4>System Engine Operations</h4>
+                        <button class="admin-btn" onclick="exportAmenities()">📥 Backup System Layout</button>
                         <div id="admin-only-functions" style="display: none;">
-                            <button class="admin-btn" onclick="resetAmenities()">🔄 Reset to Default</button>
-                            <textarea class="admin-input" id="import-amenities" placeholder="Paste amenities list (one per line) and click Import..." rows="4"></textarea>
-                            <button class="admin-btn" onclick="importAmenities()">📤 Import List</button>
-                            <button class="admin-btn" onclick="saveAmenitiesConfig()">💾 Save Configuration</button>
-                            <button class="admin-btn" onclick="logoutAdmin()">🚪 Logout</button>
-                        </div>
-                        <div id="admin-login-prompt" style="display: block;">
-                            <p style="color: #888; font-size: 12px; margin: 10px 0;">Enter password above to access editing functions</p>
+                            <button class="admin-btn" onclick="resetAmenities()">🔄 Wipe Matrix Clear</button>
+                            <textarea class="admin-input" id="import-amenities" placeholder="Input backup structure..." rows="4"></textarea>
+                            <button class="admin-btn" onclick="importAmenities()">📤 Restore Structural Layout</button>
+                            <button class="admin-btn" onclick="logoutAdmin()">🚪 Terminate Admin Privileges</button>
                         </div>
                     </div>
                 </div>
-
-                <!-- History Section -->
                 <div id="history-section" class="admin-tab-content" style="display: none;">
                     <div class="admin-section">
-                        <h4>Share History</h4>
-                        <p style="color: #888; font-size: 12px; margin-bottom: 15px;">Track of all items shared via WhatsApp</p>
+                        <h4>Outbox Processing Logs</h4>
                         <div class="history-controls">
-                            <button class="admin-btn" onclick="refreshHistory()">🔄 Refresh</button>
-                            <button class="admin-btn danger" onclick="clearShareHistory()">🗑️ Clear All History</button>
+                            <button class="admin-btn" onclick="refreshHistory()">🔄 Fetch Logs</button>
+                            <button class="admin-btn danger" onclick="clearShareHistory()">🗑️ Wipe Access Logs</button>
                         </div>
-                        <div id="history-list" class="history-container">
-                            <p style="color: #888; text-align: center; padding: 20px;">Loading history...</p>
-                        </div>
+                        <div id="history-list" class="history-container"></div>
+                    </div>
+                </div>
+                <div id="suggestions-section" class="admin-tab-content" style="display: none;">
+                    <div class="admin-section">
+                        <h4>Manage Note Suggestions</h4>
+                        <p style="color:#888;font-size:11px;margin-bottom:10px;">Edit or remove existing suggestions below:</p>
+                        <div id="admin-suggestions-list"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Floating Action Buttons -->
-    <div class="floating-buttons floating-copy" id="floating-copy">
-        <button class="floating-btn" onclick="copyToClipboard()" title="Copy to Clipboard">📋</button>
-    </div>
-    <div class="floating-buttons floating-whatsapp" id="floating-whatsapp">
-        <button class="floating-btn" onclick="shareToWhatsApp()" title="Share via WhatsApp">📱</button>
-    </div>
+    <div class="floating-buttons floating-copy" id="floating-copy"><button class="floating-btn" onclick="copyToClipboard()">📋</button></div>
+    <div class="floating-buttons floating-whatsapp" id="floating-whatsapp"><button class="floating-btn" onclick="shareToWhatsApp()">📱</button></div>
 
     <script>
-        // In-memory data storage using localStorage for persistence
-        const STORAGE_KEYS = {
-            AMENITIES_CONFIG: 'oblu_amenities_config',
-            SHARE_HISTORY: 'oblu_share_history'
-        };
+        // ============================================
+        // APP VERSION - UPDATE ON EVERY RELEASE
+        // ============================================
+        const APP_VERSION = 'v4.0.1';
+        const BUILD_DATE = '2026-07-20';
+        const BUILD_TIME = '14:30';
 
-        // Categorized Amenities System
-        let AMENITIES_CATEGORIES = {
-            'Bathroom Items': [
-                'Toilet Roll', 'Tissue Box', 'Soap', 'Vanity Kit', 'Shower Cap',
-                'Sanitary Bag', 'Dental Kit', 'Shaving Kit', 'swing kit', 'Comb',
-                'Loofah', 'Lip Balm', 'Sunscreen Lotion', 'Insect Repellent Lotion',
-                'Hand Wash (3L)', 'Body Lotion (3L)', 'Shampoo (3L)',
-                'Conditioner (3L)', 'Shower Gel (3L)', 'Hand Wash (300ML)',
-                'Body Lotion (300ML)', 'Shampoo (300ML)', 'Conditioner (300ML)',
-                'Shower Gel (300ML)', 'Bathrobe', 'Hairdryer'
-            ],
-            'Bedroom Items': [
-                'Indoor Slippers', 'Outdoor Slippers (Female)', 'Outdoor Slippers (Male)',
-                'Cremesso (Coffee Capsules)', 'Intenso (Coffee Capsules)', 'Decaf (Coffee Capsules)',
-                'Segafredo Le Origini Brasil Capsules', 'Segafredo Espresso Capsules', 'Segafredo Decaffeinated Capsules',
-                'Milk Capsule', 'Equal Sugar', 'Brown Sugar', 'White Sugar',
-                'English Breakfast Tea', 'Chamomile Tea', 'Green Tea', 'Earl Grey Tea', 'Peppermint Tea'
-            ],
-            'General Items': [
-                'Coffee cup', 'Coffee cup (saucer)', 'Water glass', 'Wine glass', 'Spoon',
-                'DND Card', 'Garbage Bag (Big)', 'Garbage Bag (Small)', 'Beach Bag',
-                'Sponge', 'Steel Wool', 'Cotton Gloves'
-            ],
-            'Cleaning Equipment': [
-                'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'Metal Polish', 'Brasso'
-            ],
-            'Linen Items': [
-                'Bed sheet (Small)', 'Bed sheet (Large)', 'Duvet cover (Small)',
-                'Duvet cover (Large) – White Water villa', 'Pillow Protector (Small) (Soft)',
-                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) – White',
-                'Pillow cover (Large) (Firm)', 'Kimono L', 'Kimono M',
-                'Beach towel (Guest) (New Blue)', 'Bath towel', 'Hand towel',
-                'Face towel', 'Bath mat', 'Turndown mat', 'Rug'
-            ]
-        };
-
-        // Flatten categories into single array for compatibility
-        let AMENITIES = [];
-        function updateAmenitiesArray() {
-            AMENITIES = [];
-            Object.values(AMENITIES_CATEGORIES).forEach(categoryItems => {
-                AMENITIES.push(...categoryItems);
-            });
-        }
-        updateAmenitiesArray();
-
-        // Global variables
-        let selectedAmenities = [];
-        let selectedVilla = null;
-        let isAdminMode = false;
-        let currentAdminSection = 'manage';
-        let adminAuthenticated = false;
-        let currentSearchTerm = '';
-        let currentCategoryFilter = 'all';
-        let searchTimeout = null;
-
-        // Global villa names mapping
-        const villaNames = {
-            'water-villa-1st': 'Water Villa 1st Pantry',
-            'water-villa-2nd': 'Water Villa 2nd Pantry',
-            'beach-villa-1st': 'Beach Villa 1st Pantry',
-            'beach-villa-2nd': 'Beach Villa 2nd Pantry'
-        };
-
-        // Default categories backup (after adding Cleaning Equipment)
-        const DEFAULT_CATEGORIES = {
-            'Bathroom Items': [
-                'Toilet Roll', 'Tissue Box', 'Soap', 'Vanity Kit', 'Shower Cap',
-                'Sanitary Bag', 'Dental Kit', 'Shaving Kit', 'swing kit', 'Comb',
-                'Loofah', 'Lip Balm', 'Sunscreen Lotion', 'Insect Repellent Lotion',
-                'Hand Wash (3L)', 'Body Lotion (3L)', 'Shampoo (3L)',
-                'Conditioner (3L)', 'Shower Gel (3L)', 'Hand Wash (300ML)',
-                'Body Lotion (300ML)', 'Shampoo (300ML)', 'Conditioner (300ML)',
-                'Shower Gel (300ML)', 'Bathrobe', 'Hairdryer'
-            ],
-            'Bedroom Items': [
-                'Indoor Slippers', 'Outdoor Slippers (Female)', 'Outdoor Slippers (Male)',
-                'Cremesso (Coffee Capsules)', 'Intenso (Coffee Capsules)', 'Decaf (Coffee Capsules)',
-                'Segafredo Le Origini Brasil Capsules', 'Segafredo Espresso Capsules', 'Segafredo Decaffeinated Capsules',
-                'Milk Capsule', 'Equal Sugar', 'Brown Sugar', 'White Sugar',
-                'English Breakfast Tea', 'Chamomile Tea', 'Green Tea', 'Earl Grey Tea', 'Peppermint Tea'
-            ],
-            'General Items': [
-                'Coffee cup', 'Coffee cup (saucer)', 'Water glass', 'Wine glass', 'Spoon',
-                'DND Card', 'Garbage Bag (Big)', 'Garbage Bag (Small)', 'Beach Bag',
-                'Sponge', 'Steel Wool', 'Cotton Gloves'
-            ],
-            'Cleaning Equipment': [
-                'R1', 'R2', 'R3', 'R4', 'R5', 'R6', 'R7', 'Metal Polish', 'Brasso'
-            ],
-            'Linen Items': [
-                'Bed sheet (Small)', 'Bed sheet (Large)', 'Duvet cover (Small)',
-                'Duvet cover (Large) – White Water villa', 'Pillow Protector (Small) (Soft)',
-                'Pillow Protector (Large) (Firm)', 'Pillow cover (Small) (Soft) – White',
-                'Pillow cover (Large) (Firm)', 'Kimono L', 'Kimono M',
-                'Beach towel (Guest) (New Blue)', 'Bath towel', 'Hand towel',
-                'Face towel', 'Bath mat', 'Turndown mat', 'Rug'
-            ]
-        };
-
-        // Debug villa selection system
-        function debugVillaSystem() {
-            console.log('=== Villa Selection System Debug ===');
-            console.log('Villa buttons found:', document.querySelectorAll('.villa-btn').length);
-            console.log('Villa names mapping:', villaNames);
+        // ============================================
+        // FORCE UPDATE - Clears cache if version changed
+        // ============================================
+        (function forceUpdate() {
+            const storedVersion = localStorage.getItem('sangeli_app_version');
             
-            document.querySelectorAll('.villa-btn').forEach((btn, index) => {
-                const dataVilla = btn.getAttribute('data-villa');
-                const textContent = btn.textContent.replace(/\s+/g, ' ').trim();
-                console.log(`Button ${index + 1}:`, {
-                    dataVilla: dataVilla,
-                    textContent: textContent,
-                    hasEventListener: btn.onclick !== null
-                });
-            });
+            if (storedVersion !== APP_VERSION) {
+                console.log('🔄 App update detected! Version:', APP_VERSION);
+                console.log('🔄 Previous version:', storedVersion || 'First install');
+                
+                if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                        names.forEach(function(name) {
+                            if (name.includes('oblu-sangeli') || name.includes('sangeli')) {
+                                caches.delete(name).then(() => {
+                                    console.log('🗑️ Deleted cache:', name);
+                                });
+                            }
+                        });
+                    });
+                }
+                
+                localStorage.setItem('sangeli_app_version', APP_VERSION);
+                localStorage.setItem('sangeli_build_date', BUILD_DATE);
+                localStorage.setItem('sangeli_build_time', BUILD_TIME);
+                
+                setTimeout(() => {
+                    const updateMsg = document.createElement('div');
+                    updateMsg.style.cssText = `
+                        position: fixed;
+                        top: 10px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background: #00cc00;
+                        color: #0a0a0a;
+                        padding: 12px 24px;
+                        border-radius: 8px;
+                        font-weight: bold;
+                        font-size: 14px;
+                        z-index: 999999;
+                        box-shadow: 0 4px 30px rgba(0,204,0,0.6);
+                        text-align: center;
+                        max-width: 90%;
+                        animation: slideDown 0.5s ease;
+                    `;
+                    updateMsg.textContent = '🔄 App Updated! Refreshing...';
+                    document.body.appendChild(updateMsg);
+                    
+                    const style = document.createElement('style');
+                    style.textContent = `
+                        @keyframes slideDown {
+                            from { transform: translateX(-50%) translateY(-100px); opacity: 0; }
+                            to { transform: translateX(-50%) translateY(0); opacity: 1; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                    
+                    setTimeout(() => {
+                        window.location.reload(true);
+                    }, 1500);
+                }, 500);
+            } else {
+                console.log('✅ App is up to date (version:', APP_VERSION, ')');
+            }
+        })();
+
+        // ============================================
+        // DROPDOWN FUNCTIONS
+        // ============================================
+        function toggleDropdown(event) {
+            event.stopPropagation();
+            const menu = document.getElementById('dropdownMenu');
+            const arrow = document.getElementById('dropdownArrow');
             
-            console.log('Selected villa container:', document.getElementById('selected-villa'));
-            console.log('Current selected villa:', selectedVilla);
+            menu.classList.toggle('show');
+            arrow.classList.toggle('open');
         }
 
-        // Initialize on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Force update to latest categories with Cleaning Equipment
-            AMENITIES_CATEGORIES = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-            updateAmenitiesArray();
-            saveAmenitiesConfig(); // Save the updated categories immediately
-
-            loadAmenitiesConfig();
-            initializeUI();
-            
-            // Debug villa system after initialization
-            setTimeout(() => {
-                debugVillaSystem();
-            }, 100);
-            
-            console.log(`
-        === OBLU SELECT Sangeli Amenities Manager ===
-
-        Features:
-        - Password-protected admin panel (9999) with categorized amenities
-        - Multiple sharing options (WhatsApp, Telegram, SMS, Email, Viber, Messenger, Twitter, LinkedIn)
-        - Multiple color themes (Green, Blue, Purple, Orange)
-        - Selected items displayed at top with double-tap removal
-        - Villa selection system with pantry options
-        - Quick admin dashboard widget for real-time management
-
-        Current amenities count: ${AMENITIES.length}
-        Categories: ${Object.keys(AMENITIES_CATEGORIES).join(', ')}
-        `);
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const container = document.querySelector('.dropdown-container');
+            if (container && !container.contains(event.target)) {
+                document.getElementById('dropdownMenu').classList.remove('show');
+                document.getElementById('dropdownArrow').classList.remove('open');
+            }
         });
 
-        // Initialize UI
-        function initializeUI() {
-            renderAmenities();
-            updateCategoriesView();
-            initializeSearchAndFilter();
-            initializeVillaSelection();
+        // ============================================
+        // CLEAR CACHE FUNCTIONS
+        // ============================================
+        function clearCache() {
+            if (confirm('🧹 Clear app cache?\n\nThis will remove cached files and force a fresh load.')) {
+                // Clear service worker caches
+                if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                        names.forEach(function(name) {
+                            if (name.includes('oblu-sangeli') || name.includes('sangeli')) {
+                                caches.delete(name).then(() => {
+                                    console.log('🗑️ Deleted cache:', name);
+                                });
+                            }
+                        });
+                    });
+                }
+                
+                showMessage('🧹 Cache cleared! Refresh to reload.', 'success');
+                document.getElementById('dropdownMenu').classList.remove('show');
+                document.getElementById('dropdownArrow').classList.remove('open');
+                
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 1500);
+            }
+        }
 
-            // Set up event listeners
+        function clearAllData() {
+            if (confirm('🧹 Clear ALL app data?\n\nThis will remove:\n- All selections\n- All notes\n- Suggestions\n- History\n- Cache\n\nThis cannot be undone!')) {
+                // Clear localStorage
+                localStorage.clear();
+                
+                // Clear caches
+                if ('caches' in window) {
+                    caches.keys().then(function(names) {
+                        names.forEach(function(name) {
+                            caches.delete(name).then(() => {
+                                console.log('🗑️ Deleted cache:', name);
+                            });
+                        });
+                    });
+                }
+                
+                showMessage('🧹 All data cleared!', 'error');
+                document.getElementById('dropdownMenu').classList.remove('show');
+                document.getElementById('dropdownArrow').classList.remove('open');
+                
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 1500);
+            }
+        }
+
+        function resetToDefault() {
+            if (confirm('🔄 Reset to default settings?\n\nThis will restore default suggestions and clear your selections.')) {
+                // Reset suggestions to default
+                const defaultSuggestions = [
+                    'Pantry out of stock',
+                    'Item not available in pantry',
+                    'Running low on supplies',
+                    'Need urgent restock',
+                    'Limited quantity available',
+                    'Out of stock - please replenish',
+                    'Insufficient stock for today'
+                ];
+                localStorage.setItem('oblu_note_suggestions', JSON.stringify(defaultSuggestions));
+                
+                // Clear selections
+                localStorage.removeItem('oblu_matrix_cache');
+                localStorage.removeItem('oblu_selected_items');
+                localStorage.removeItem('oblu_selected_villa');
+                localStorage.removeItem('oblu_notes');
+                
+                showMessage('🔄 Reset to defaults!', 'success');
+                document.getElementById('dropdownMenu').classList.remove('show');
+                document.getElementById('dropdownArrow').classList.remove('open');
+                
+                setTimeout(() => {
+                    window.location.reload(true);
+                }, 1500);
+            }
+        }
+
+        function showUninstallModal() {
+            document.getElementById('dropdownMenu').classList.remove('show');
+            document.getElementById('dropdownArrow').classList.remove('open');
+            
+            const modal = document.getElementById('uninstallModal');
+            
+            // Detect device
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isAndroid = /Android/.test(navigator.userAgent);
+            
+            document.getElementById('ios-uninstall-step').style.display = isIOS ? 'block' : 'none';
+            document.getElementById('android-uninstall-step').style.display = isAndroid ? 'block' : 'none';
+            document.getElementById('browser-uninstall-step').style.display = (!isIOS && !isAndroid) ? 'block' : 'none';
+            
+            modal.classList.add('show');
+        }
+
+        function closeUninstallModal() {
+            document.getElementById('uninstallModal').classList.remove('show');
+        }
+
+        function confirmUninstall() {
+            // Unregister service workers
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    registrations.forEach(function(registration) {
+                        registration.unregister();
+                        console.log('🗑️ Unregistered service worker');
+                    });
+                });
+            }
+            
+            // Clear all data
+            localStorage.clear();
+            
+            // Clear caches
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    names.forEach(function(name) {
+                        caches.delete(name).then(() => {
+                            console.log('🗑️ Deleted cache:', name);
+                        });
+                    });
+                });
+            }
+            
+            closeUninstallModal();
+            showMessage('🗑️ App data cleared! Remove from home screen manually.', 'error');
+            
+            setTimeout(() => {
+                window.location.reload(true);
+            }, 2000);
+        }
+
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        const STORAGE_KEYS = { 
+            SHARE_HISTORY: 'oblu_share_history',
+            MATRIX_CACHE: 'oblu_matrix_cache',
+            NOTE_SUGGESTIONS: 'oblu_note_suggestions'
+        };
+        
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbznho1OV5R0GPXW1nIjJeXmoUOv3M75yJbvxrKtRBAVPW--Y4XtMpjuPvVVK124GlKn/exec";
+
+        let AMENITIES_CATEGORIES = {};
+        let AMENITIES = []; 
+        let selectedAmenities = []; 
+        let selectedVilla = null;
+        let adminAuthenticated = false; 
+        let currentSearchTerm = ''; 
+        let currentCategoryFilter = 'all'; 
+        let searchTimeout = null;
+        let noteSuggestions = [];
+        let deferredPrompt = null;
+        
+        const villaNames = { 
+            'water-villa-1st': 'Water Villa 1st Pantry', 
+            'water-villa-2nd': 'Water Villa 2nd Pantry', 
+            'beach-villa-1st': 'Beach Villa 1st Pantry', 
+            'beach-villa-2nd': 'Beach Villa 2nd Pantry' 
+        };
+
+        document.addEventListener('DOMContentLoaded', function() { 
+            loadInitialData(); 
+            initializeUI(); 
+            initServiceWorkerAndPWA();
+            loadNoteSuggestions();
+        });
+
+        // ============================================
+        // NOTE SUGGESTIONS
+        // ============================================
+        function loadNoteSuggestions() {
+            const saved = localStorage.getItem(STORAGE_KEYS.NOTE_SUGGESTIONS);
+            if (saved) {
+                try {
+                    noteSuggestions = JSON.parse(saved);
+                } catch(e) {
+                    noteSuggestions = [];
+                }
+            }
+            
+            if (noteSuggestions.length === 0) {
+                noteSuggestions = [
+                    'Pantry out of stock',
+                    'Item not available in pantry',
+                    'Running low on supplies',
+                    'Need urgent restock',
+                    'Limited quantity available',
+                    'Out of stock - please replenish',
+                    'Insufficient stock for today'
+                ];
+                saveNoteSuggestions();
+            }
+            
+            renderSuggestions();
+        }
+
+        function saveNoteSuggestions() {
+            localStorage.setItem(STORAGE_KEYS.NOTE_SUGGESTIONS, JSON.stringify(noteSuggestions));
+        }
+
+        function renderSuggestions() {
+            const container = document.getElementById('suggestions-container');
+            container.innerHTML = '';
+            
+            noteSuggestions.forEach((suggestion, index) => {
+                const chip = document.createElement('div');
+                chip.className = 'suggestion-chip';
+                chip.innerHTML = `
+                    ${suggestion}
+                    <span class="remove-chip" onclick="event.stopPropagation();removeSuggestion(${index})">×</span>
+                `;
+                chip.onclick = () => applySuggestion(suggestion);
+                container.appendChild(chip);
+            });
+        }
+
+        function applySuggestion(text) {
+            const input = document.getElementById('custom-notes-input');
+            const current = input.value.trim();
+            if (current) {
+                input.value = current + '\n' + text;
+            } else {
+                input.value = text;
+            }
+            input.dispatchEvent(new Event('input'));
+            showMessage('💡 Note added!', 'success');
+        }
+
+        function addSuggestion() {
+            const input = document.getElementById('new-suggestion-input');
+            const text = input.value.trim();
+            if (!text) {
+                showMessage('Please enter a suggestion', 'error');
+                return;
+            }
+            if (noteSuggestions.includes(text)) {
+                showMessage('Suggestion already exists', 'error');
+                return;
+            }
+            noteSuggestions.push(text);
+            saveNoteSuggestions();
+            renderSuggestions();
+            input.value = '';
+            if (adminAuthenticated) renderAdminSuggestions();
+            showMessage('✅ Suggestion added!', 'success');
+        }
+
+        function removeSuggestion(index) {
+            noteSuggestions.splice(index, 1);
+            saveNoteSuggestions();
+            renderSuggestions();
+            if (adminAuthenticated) renderAdminSuggestions();
+            showMessage('🗑️ Suggestion removed', 'error');
+        }
+
+        function handleSuggestionKeyPress(e) {
+            if (e.key === 'Enter') addSuggestion();
+        }
+
+        function renderAdminSuggestions() {
+            const container = document.getElementById('admin-suggestions-list');
+            container.innerHTML = '';
+            
+            if (noteSuggestions.length === 0) {
+                container.innerHTML = '<div style="color:#666;font-size:12px;padding:8px;">No suggestions available</div>';
+                return;
+            }
+            
+            noteSuggestions.forEach((suggestion, index) => {
+                const item = document.createElement('div');
+                item.className = 'category-item';
+                item.innerHTML = `
+                    <span style="font-size:12px;">${suggestion}</span>
+                    <div>
+                        <button class="remove-btn" onclick="removeSuggestion(${index})">✕</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        // ============================================
+        // PWA INSTALL
+        // ============================================
+        const installBtn = document.getElementById('universal-install-btn');
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+        function initServiceWorkerAndPWA() {
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('/Hk_amenities_v3/sw.js?v=' + APP_VERSION)
+                    .then(reg => {
+                        console.log('✅ Service Worker registered:', reg.scope);
+                        
+                        reg.addEventListener('updatefound', () => {
+                            console.log('🔄 New Service Worker found!');
+                            const newWorker = reg.installing;
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    console.log('🔄 New SW installed, reloading...');
+                                    showMessage('🔄 App update available!', 'success');
+                                    setTimeout(() => {
+                                        window.location.reload(true);
+                                    }, 2000);
+                                }
+                            });
+                        });
+                    })
+                    .catch(err => {
+                        console.log('❌ Service Worker registration failed:', err);
+                    });
+                
+                let refreshing = false;
+                navigator.serviceWorker.addEventListener('controllerchange', () => {
+                    if (!refreshing) {
+                        refreshing = true;
+                        console.log('🔄 Service Worker updated!');
+                        window.location.reload();
+                    }
+                });
+                
+                navigator.serviceWorker.addEventListener('message', (event) => {
+                    if (event.data && event.data.type === 'SW_UPDATED') {
+                        console.log('📢 SW Update notification:', event.data);
+                        showMessage('🔄 App updated successfully!', 'success');
+                    }
+                });
+            }
+            
+            if (isIOS && !isStandalone) {
+                installBtn.style.display = 'inline-block';
+                installBtn.textContent = '📱 Add to Home Screen';
+                installBtn.onclick = function() {
+                    alert("🍏 To install on iPhone / iOS:\n1. Tap the Safari 'Share' button (square icon with an up arrow at the bottom menu).\n2. Scroll down the panel and select 'Add to Home Screen'.");
+                };
+            } else if (!isStandalone) {
+                installBtn.style.display = 'inline-block';
+            }
+        }
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'inline-block';
+            installBtn.textContent = '📥 Install';
+            installBtn.onclick = handleInstallClick;
+        });
+
+        async function handleInstallClick() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                if (outcome === 'accepted') {
+                    installBtn.style.display = 'none';
+                    showMessage("🎉 App Installed!", "success");
+                }
+            } else {
+                showMessage("Use browser menu to install", "success");
+            }
+        }
+
+        window.addEventListener('appinstalled', () => {
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+            showMessage("🎉 App Installed!", "success");
+        });
+
+        // ============================================
+        // ORIGINAL APP FUNCTIONS (PRESERVED)
+        // ============================================
+        function loadInitialData() {
+            const localCache = localStorage.getItem(STORAGE_KEYS.MATRIX_CACHE);
+            if (localCache) {
+                try {
+                    AMENITIES_CATEGORIES = JSON.parse(localCache);
+                    updateAmenitiesArray();
+                    renderAmenities();
+                } catch(e) {
+                    console.error("Cache parsing mismatch, bypassing cache layout.", e);
+                }
+            }
+            
+            if (WEB_APP_URL) {
+                fetch(WEB_APP_URL)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length > 0 && data._status !== "empty") {
+                        AMENITIES_CATEGORIES = data;
+                        localStorage.setItem(STORAGE_KEYS.MATRIX_CACHE, JSON.stringify(data));
+                        updateAmenitiesArray(); 
+                        renderAmenities();
+                        if (adminAuthenticated) updateCategoryManagement();
+                    }
+                }).catch(err => console.log("Startup sync bypassed (offline layout mode)."));
+            }
+        }
+
+        function syncCloudDatabase() {
+            if (!WEB_APP_URL) {
+                showMessage("Sync setup missing URL key", "error");
+                return;
+            }
+            
+            const btn = document.getElementById('sync-btn');
+            btn.classList.add('spinning');
+            
+            fetch(WEB_APP_URL)
+            .then(res => res.json())
+            .then(data => {
+                btn.classList.remove('spinning');
+                if (data && typeof data === 'object' && !Array.isArray(data) && Object.keys(data).length > 0) {
+                    if (data._status === "empty") {
+                        showMessage("Cloud database currently completely empty.", "error");
+                    } else {
+                        AMENITIES_CATEGORIES = data;
+                        localStorage.setItem(STORAGE_KEYS.MATRIX_CACHE, JSON.stringify(data));
+                        updateAmenitiesArray(); 
+                        renderAmenities();
+                        if (adminAuthenticated) updateCategoryManagement();
+                        showMessage("🔄 Sync Complete & Cached!", "success");
+                    }
+                } else {
+                    showMessage("Blank profile structure synced", "error");
+                }
+            })
+            .catch(err => {
+                btn.classList.remove('spinning');
+                console.error(err);
+                showMessage("❌ Connection error. Failed to sync.", "error");
+            });
+        }
+
+        function updateAmenitiesArray() { 
+            AMENITIES = []; 
+            Object.values(AMENITIES_CATEGORIES).forEach(items => AMENITIES.push(...items)); 
+        }
+        
+        function initializeUI() {
+            initializeSearchAndFilter();
+            document.querySelectorAll('.villa-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    selectedVilla = this.getAttribute('data-villa');
+                    document.querySelectorAll('.villa-btn').forEach(b => b.classList.remove('selected'));
+                    this.classList.add('selected');
+                    document.getElementById('selected-villa').textContent = `Assigned location: ${villaNames[selectedVilla]}`;
+                    updateSelectedItemsDisplay();
+                });
+            });
+
+            document.getElementById('custom-notes-input').addEventListener('input', updateSelectedItemsDisplay);
             document.getElementById('copy-btn').addEventListener('click', copyToClipboard);
             document.getElementById('whatsapp-btn').addEventListener('click', shareToWhatsApp);
             document.getElementById('clear-btn').addEventListener('click', clearList);
         }
 
-        // Initialize villa selection
-        function initializeVillaSelection() {
-            // Villa selection buttons
-            document.querySelectorAll('.villa-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const villaType = this.getAttribute('data-villa');
-                    if (villaType) {
-                        selectVilla(villaType);
-                    } else {
-                        console.error('Villa button missing data-villa attribute:', this);
-                        showMessage('Error: Villa selection failed', 'error');
-                    }
-                });
-            });
-
-            // Ensure all villa buttons have proper data attributes
-            const villaButtons = document.querySelectorAll('.villa-btn');
-            const expectedVillas = ['water-villa-1st', 'water-villa-2nd', 'beach-villa-1st', 'beach-villa-2nd'];
-            
-            villaButtons.forEach((btn, index) => {
-                if (!btn.getAttribute('data-villa') && expectedVillas[index]) {
-                    btn.setAttribute('data-villa', expectedVillas[index]);
-                    console.log(`Fixed missing data-villa attribute for button ${index + 1}`);
-                }
-            });
-        }
-
-        // Initialize search and filter functionality
         function initializeSearchAndFilter() {
-            const searchInput = document.getElementById('search-input');
-            const searchClear = document.getElementById('search-clear');
-
-            // Real-time search with debouncing
-            searchInput.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-                const searchTerm = this.value.trim();
-
-                // Show/hide clear button
-                if (searchTerm) {
-                    searchClear.classList.add('show');
-                } else {
-                    searchClear.classList.remove('show');
-                }
-
-                // Debounce search to avoid excessive filtering
-                searchTimeout = setTimeout(() => {
-                    performSearch(searchTerm);
-                }, 300);
+            const input = document.getElementById('search-input'); 
+            const clearBtn = document.getElementById('search-clear');
+            input.addEventListener('input', function() {
+                clearTimeout(searchTimeout); 
+                currentSearchTerm = this.value.trim().toLowerCase();
+                clearBtn.classList[currentSearchTerm ? 'add' : 'remove']('show');
+                searchTimeout = setTimeout(applyFilters, 200);
             });
-
-            // Clear search when pressing Escape
-            searchInput.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') {
-                    clearSearch();
-                }
-            });
-
-            // Generate category filter buttons
             renderCategoryFilters();
         }
 
-        // Perform search functionality
-        function performSearch(searchTerm) {
-            currentSearchTerm = searchTerm.toLowerCase();
-            applyFilters();
-        }
-
-        // Filter by category
         function filterByCategory(category) {
-            currentCategoryFilter = category;
-
-            // Update filter button states
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-
-            const targetButton = document.querySelector(`[data-category="${category}"]`);
-            if (targetButton) {
-                targetButton.classList.add('active');
-            }
-
+            currentCategoryFilter = category; 
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            const target = document.querySelector(`[data-category="${category}"]`); 
+            if (target) target.classList.add('active');
             applyFilters();
-            showMessage(`Filtered by: ${category === 'all' ? 'All Categories' : category}`, 'success');
         }
 
-        // Apply all active filters
         function applyFilters() {
-            const amenityButtons = document.querySelectorAll('.amenity-btn');
-            const categoryHeaders = document.querySelectorAll('.category-header');
-            let visibleItemsCount = 0;
-            let visibleCategoriesCount = 0;
+            const btns = document.querySelectorAll('.amenity-btn'); 
+            const heads = document.querySelectorAll('.category-header'); 
+            let visibleItems = 0;
+            const old = document.querySelector('.no-results'); 
+            if (old) old.remove();
+            btns.forEach(b => b.classList.add('hidden')); 
+            heads.forEach(h => h.classList.add('hidden'));
 
-            // Remove existing no-results message
-            const existingNoResults = document.querySelector('.no-results');
-            if (existingNoResults) {
-                existingNoResults.remove();
-            }
-
-            // First, hide all items and headers
-            amenityButtons.forEach(btn => btn.classList.add('hidden'));
-            categoryHeaders.forEach(header => header.classList.add('hidden'));
-
-            // Process each category
-            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
-                let categoryHasVisibleItems = false;
-                const categoryHeader = Array.from(categoryHeaders).find(header => 
-                    header.textContent === categoryName
-                );
-
-                // Check if category should be visible based on filter
-                const categoryVisible = currentCategoryFilter === 'all' || currentCategoryFilter === categoryName;
-
-                if (categoryVisible) {
-                    // Process items in this category
-                    AMENITIES_CATEGORIES[categoryName].forEach(item => {
-                        const itemButton = Array.from(amenityButtons).find(btn => 
-                            btn.textContent === item
-                        );
-
-                        if (itemButton) {
-                            const matchesSearch = !currentSearchTerm || 
-                                item.toLowerCase().includes(currentSearchTerm);
-
-                            if (matchesSearch) {
-                                itemButton.classList.remove('hidden');
-                                categoryHasVisibleItems = true;
-                                visibleItemsCount++;
-
-                                // Add highlight animation for search results
-                                if (currentSearchTerm && item.toLowerCase().includes(currentSearchTerm)) {
-                                    itemButton.classList.add('highlight');
-                                    setTimeout(() => {
-                                        itemButton.classList.remove('highlight');
-                                    }, 1500);
-                                }
-                            }
+            Object.keys(AMENITIES_CATEGORIES).forEach(cat => {
+                let hasVisible = false; 
+                const headerEl = Array.from(heads).find(h => h.textContent === cat);
+                if (currentCategoryFilter === 'all' || currentCategoryFilter === cat) {
+                    AMENITIES_CATEGORIES[cat].forEach(item => {
+                        const btnEl = Array.from(btns).find(b => b.textContent === item);
+                        if (btnEl && (!currentSearchTerm || item.toLowerCase().includes(currentSearchTerm))) {
+                            btnEl.classList.remove('hidden'); 
+                            hasVisible = true; 
+                            visibleItems++;
                         }
                     });
-
-                    // Show category header if it has visible items
-                    if (categoryHasVisibleItems && categoryHeader) {
-                        categoryHeader.classList.remove('hidden');
-                        visibleCategoriesCount++;
-                    }
+                    if (hasVisible && headerEl) headerEl.classList.remove('hidden');
                 }
             });
-
-            // Show no results message if needed
-            if (visibleItemsCount === 0) {
-                const amenitiesGrid = document.getElementById('amenities-grid');
-                const noResultsDiv = document.createElement('div');
-                noResultsDiv.className = 'no-results';
-                noResultsDiv.textContent = currentSearchTerm ? 
-                    `No amenities found for "${currentSearchTerm}"` : 
-                    'No amenities in this category';
-                amenitiesGrid.appendChild(noResultsDiv);
+            if (visibleItems === 0 && Object.keys(AMENITIES_CATEGORIES).length > 0) {
+                const err = document.createElement('div'); 
+                err.className = 'no-results'; 
+                err.textContent = 'No records matched tracking';
+                document.getElementById('amenities-grid').appendChild(err);
             }
-
-            // Update search statistics
-            updateSearchStats(visibleItemsCount, visibleCategoriesCount);
+            document.getElementById('search-stats').textContent = `Total elements: ${AMENITIES.length}`;
         }
 
-        // Update search statistics
-        function updateSearchStats(visibleItems, visibleCategories) {
-            const searchStats = document.getElementById('search-stats');
-            const totalItems = AMENITIES.length;
-            const totalCategories = Object.keys(AMENITIES_CATEGORIES).length;
-
-            let statsText = '';
-
-            if (currentSearchTerm && currentCategoryFilter !== 'all') {
-                statsText = `Found ${visibleItems} items in "${currentCategoryFilter}" matching "${currentSearchTerm}"`;
-            } else if (currentSearchTerm) {
-                statsText = `Found ${visibleItems} items across ${visibleCategories} categories matching "${currentSearchTerm}"`;
-            } else if (currentCategoryFilter !== 'all') {
-                statsText = `Showing ${visibleItems} items in "${currentCategoryFilter}"`;
-            } else {
-                statsText = `Showing all ${totalItems} amenities across ${totalCategories} categories`;
-            }
-
-            searchStats.textContent = statsText;
-
-            // Add highlight class for active filters
-            if (currentSearchTerm || currentCategoryFilter !== 'all') {
-                searchStats.classList.add('highlight');
-            } else {
-                searchStats.classList.remove('highlight');
-            }
+        function clearSearch() { 
+            document.getElementById('search-input').value = ''; 
+            document.getElementById('search-clear').classList.remove('show'); 
+            currentSearchTerm = ''; 
+            applyFilters(); 
         }
-
-        // Clear search
-        function clearSearch() {
-            const searchInput = document.getElementById('search-input');
-            const searchClear = document.getElementById('search-clear');
-
-            searchInput.value = '';
-            searchClear.classList.remove('show');
-            currentSearchTerm = '';
-
-            applyFilters();
-            showMessage('Search cleared', 'success');
-        }
-
-        // Render category filter buttons
+        
         function renderCategoryFilters() {
-            const filterContainer = document.getElementById('filter-container');
-            if (!filterContainer) return;
-
-            // Keep the "All Categories" button and add category-specific filters
-            const allButton = filterContainer.querySelector('[data-category="all"]');
-            filterContainer.innerHTML = '';
-            
-            if (allButton) {
-                filterContainer.appendChild(allButton);
-            } else {
-                const allBtn = document.createElement('button');
-                allBtn.className = 'filter-btn active';
-                allBtn.setAttribute('data-category', 'all');
-                allBtn.textContent = 'All Categories';
-                allBtn.onclick = () => filterByCategory('all');
-                filterContainer.appendChild(allBtn);
-            }
-
-            // Add category filter buttons
-            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
-                const filterBtn = document.createElement('button');
-                filterBtn.className = 'filter-btn';
-                filterBtn.setAttribute('data-category', categoryName);
-                filterBtn.textContent = categoryName;
-                filterBtn.onclick = () => filterByCategory(categoryName);
-                filterContainer.appendChild(filterBtn);
+            const container = document.getElementById('filter-container'); 
+            if (!container) return;
+            container.innerHTML = '<button class="filter-btn active" data-category="all" onclick="filterByCategory(\'all\')">All Columns</button>';
+            Object.keys(AMENITIES_CATEGORIES).forEach(cat => {
+                const btn = document.createElement('button'); 
+                btn.className = 'filter-btn'; 
+                btn.setAttribute('data-category', cat);
+                btn.textContent = cat; 
+                btn.onclick = () => filterByCategory(cat); 
+                container.appendChild(btn);
             });
         }
 
-        // Quick filter shortcuts
-        function quickFilter(term) {
-            const searchInput = document.getElementById('search-input');
-            searchInput.value = term;
-            document.getElementById('search-clear').classList.add('show');
-            performSearch(term);
-        }
-
-        // Load amenities configuration from localStorage
-        function loadAmenitiesConfig() {
-            try {
-                const savedConfig = localStorage.getItem(STORAGE_KEYS.AMENITIES_CONFIG);
-                if (savedConfig) {
-                    AMENITIES_CATEGORIES = JSON.parse(savedConfig);
-                    updateAmenitiesArray();
-                    console.log('Loaded saved amenities configuration');
-                }
-            } catch (error) {
-                console.error('Error loading amenities config:', error);
-            }
-        }
-
-        // Save amenities configuration to localStorage
-        function saveAmenitiesConfig() {
-            try {
-                localStorage.setItem(STORAGE_KEYS.AMENITIES_CONFIG, JSON.stringify(AMENITIES_CATEGORIES));
-                showMessage('Configuration saved successfully!', 'success');
-                console.log('Saved amenities configuration');
-            } catch (error) {
-                console.error('Error saving amenities config:', error);
-                showMessage('Failed to save configuration', 'error');
-            }
-        }
-
-        // Admin section navigation
-        function showAdminSection(section) {
-            currentAdminSection = section;
-
-            // Update navigation buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(section + '-btn').classList.add('active');
-
-            // Show/hide sections
-            document.getElementById('manage-section').style.display = section === 'manage' ? 'block' : 'none';
-            document.getElementById('history-section').style.display = section === 'history' ? 'block' : 'none';
-
-            // Load history if history section is selected
-            if (section === 'history') {
-                loadShareHistory();
-            }
-        }
-
-        // Load and display share history
-        function loadShareHistory() {
-            try {
-                const historyData = localStorage.getItem(STORAGE_KEYS.SHARE_HISTORY);
-                const history = historyData ? JSON.parse(historyData) : [];
-                displayHistory(history);
-            } catch (error) {
-                console.error('Error loading share history:', error);
-                document.getElementById('history-list').innerHTML = '<p style="color: #ff6666; text-align: center; padding: 20px;">Error loading history</p>';
-            }
-        }
-
-        // Display history in the admin panel
-        function displayHistory(history) {
-            const historyContainer = document.getElementById('history-list');
-
-            if (history.length === 0) {
-                historyContainer.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No sharing history yet</p>';
-                return;
-            }
-
-            historyContainer.innerHTML = history.map(item => `
-                <div class="history-item">
-                    <div class="history-header">
-                        <span>${item.platform || 'WhatsApp'}</span>
-                        <span style="font-size: 11px; color: #888;">${new Date(item.shared_at).toLocaleString()}</span>
-                    </div>
-                    ${item.villa_type ? `<div class="history-villa">${item.villa_type}</div>` : ''}
-                    <div class="history-amenities">${item.amenities.join(', ')}</div>
-                </div>
-            `).join('');
-        }
-
-        // Save share history to localStorage
-        function saveShareHistoryLocal(villaType, amenities, platform) {
-            try {
-                const historyData = localStorage.getItem(STORAGE_KEYS.SHARE_HISTORY);
-                const history = historyData ? JSON.parse(historyData) : [];
-
-                history.unshift({
-                    villa_type: villaType,
-                    amenities: amenities,
-                    platform: platform,
-                    shared_at: new Date().toISOString()
-                });
-
-                // Keep only last 100 entries
-                if (history.length > 100) {
-                    history.splice(100);
-                }
-
-                localStorage.setItem(STORAGE_KEYS.SHARE_HISTORY, JSON.stringify(history));
-            } catch (error) {
-                console.error('Error saving share history:', error);
-            }
-        }
-
-        // Clear share history
-        function clearShareHistory() {
-            if (confirm('Are you sure you want to clear all sharing history? This cannot be undone.')) {
-                localStorage.removeItem(STORAGE_KEYS.SHARE_HISTORY);
-                loadShareHistory();
-                showMessage('History cleared successfully', 'success');
-            }
-        }
-
-        // Refresh history display
-        function refreshHistory() {
-            loadShareHistory();
-            showMessage('History refreshed', 'success');
-        }
-
-        // Render amenities grid with categories
         function renderAmenities() {
-            const amenitiesGrid = document.getElementById('amenities-grid');
-            amenitiesGrid.innerHTML = '';
-
-            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
-                // Add category header
-                const categoryHeader = document.createElement('div');
-                categoryHeader.className = 'category-header';
-                categoryHeader.textContent = categoryName;
-                amenitiesGrid.appendChild(categoryHeader);
-
-                // Add amenities in this category
-                AMENITIES_CATEGORIES[categoryName].forEach(amenity => {
-                    const amenityBtn = document.createElement('button');
-                    amenityBtn.className = 'amenity-btn';
-                    amenityBtn.textContent = amenity;
-                    amenityBtn.onclick = () => toggleAmenity(amenity);
-
-                    // Apply light red styling for Segafredo capsules
-                    if (amenity.toLowerCase().includes('segafredo')) {
-                        amenityBtn.classList.add('light-red');
-                    }
-
-                    amenitiesGrid.appendChild(amenityBtn);
+            const grid = document.getElementById('amenities-grid'); 
+            grid.innerHTML = '';
+            if (Object.keys(AMENITIES_CATEGORIES).length === 0) {
+                grid.innerHTML = '<div class="no-results">System template empty. Unlock Admin Panel below or tap 🔄 to sync rows.</div>'; 
+                return;
+            }
+            Object.keys(AMENITIES_CATEGORIES).forEach(cat => {
+                const h = document.createElement('div'); 
+                h.className = 'category-header'; 
+                h.textContent = cat; 
+                grid.appendChild(h);
+                AMENITIES_CATEGORIES[cat].forEach(item => {
+                    const b = document.createElement('button'); 
+                    b.className = 'amenity-btn'; 
+                    b.textContent = item;
+                    if (item.toLowerCase().includes('segafred')) b.classList.add('light-red');
+                    b.onclick = () => toggleAmenity(item); 
+                    grid.appendChild(b);
                 });
             });
-
-            // Update amenity button states based on selected items
-            updateAmenityButtons();
-
-            // Update filter buttons and apply current filters
-            if (document.getElementById('filter-container')) {
-                renderCategoryFilters();
-                applyFilters();
-            }
+            updateAmenityButtons(); 
+            renderCategoryFilters(); 
+            applyFilters();
         }
 
-        // Toggle amenity selection
-        function toggleAmenity(amenity) {
-            const index = selectedAmenities.indexOf(amenity);
-            if (index > -1) {
-                selectedAmenities.splice(index, 1);
-                showMessage(`Removed: ${amenity}`, 'success');
-            } else {
-                selectedAmenities.push(amenity);
-                showMessage(`Added: ${amenity}`, 'success');
+        function toggleAmenity(item) {
+            const idx = selectedAmenities.indexOf(item);
+            if (idx > -1) { 
+                selectedAmenities.splice(idx, 1); 
+                showMessage(`Removed: ${item}`, 'error'); 
+            } else { 
+                selectedAmenities.push(item); 
+                showMessage(`Added: ${item}`, 'success'); 
             }
-            updateSelectedItemsDisplay();
+            updateSelectedItemsDisplay(); 
             updateAmenityButtons();
         }
 
-        // Remove amenity (for double-tap functionality)
-        function removeAmenity(amenity) {
-            const index = selectedAmenities.indexOf(amenity);
-            if (index > -1) {
-                selectedAmenities.splice(index, 1);
-                updateSelectedItemsDisplay();
-                updateAmenityButtons();
-                showMessage(`Removed: ${amenity}`, 'success');
-            }
-        }
-
-        // Update Selected Items Display
         function updateSelectedItemsDisplay() {
-            const villaInfo = selectedVilla ? `${villaNames[selectedVilla]}\n\n` : '';
-            document.getElementById('selected-items').value = villaInfo + selectedAmenities.join('\n');
-            updateFloatingButtons();
-        }
-
-        // Update floating buttons visibility
-        function updateFloatingButtons() {
-            const floatingCopy = document.getElementById('floating-copy');
-            const floatingWhatsApp = document.getElementById('floating-whatsapp');
-
-            if (selectedAmenities.length > 0) {
-                floatingCopy.classList.add('show');
-                floatingWhatsApp.classList.add('show');
-            } else {
-                floatingCopy.classList.remove('show');
-                floatingWhatsApp.classList.remove('show');
-            }
-        }
-
-        // Handle double-tap removal from textarea
-        let lastTap = 0;
-        document.getElementById('selected-items').addEventListener('click', function(e) {
-            const currentTime = new Date().getTime();
-            const tapLength = currentTime - lastTap;
-            if (tapLength < 500 && tapLength > 0) {
-                // Double tap detected
-                const textarea = e.target;
-                const cursorPosition = textarea.selectionStart;
-                const textValue = textarea.value;
-                const textBeforeCursor = textValue.substring(0, cursorPosition);
-                const textAfterCursor = textValue.substring(cursorPosition);
-                const linesBefore = textBeforeCursor.split('\n');
-                const linesAfter = textAfterCursor.split('\n');
-                const currentLine = linesBefore[linesBefore.length - 1] + linesAfter[0];
-
-                const lineContent = currentLine.trim();
-                if (lineContent && selectedAmenities.includes(lineContent)) {
-                    removeAmenity(lineContent);
-                }
-            }
-            lastTap = currentTime;
-        });
-
-        // Update amenity button states
-        function updateAmenityButtons() {
-            document.querySelectorAll('.amenity-btn').forEach(btn => {
-                if (selectedAmenities.includes(btn.textContent)) {
-                    btn.classList.add('selected');
-                } else {
-                    btn.classList.remove('selected');
-                }
-            });
-        }
-
-        // Villa selection
-        function selectVilla(villaType) {
-            // Validate villa type
-            if (!villaType || !villaNames[villaType]) {
-                console.error('Invalid villa type:', villaType);
-                showMessage('Error: Invalid villa selection', 'error');
-                return;
-            }
-
-            selectedVilla = villaType;
-
-            // Update villa button states
-            document.querySelectorAll('.villa-btn').forEach(btn => {
-                btn.classList.remove('selected');
-            });
-            
-            const selectedButton = document.querySelector(`[data-villa="${villaType}"]`);
-            if (selectedButton) {
-                selectedButton.classList.add('selected');
-            } else {
-                console.error('Villa button not found for:', villaType);
-                showMessage('Error: Villa button not found', 'error');
-                return;
-            }
-
-            // Update display
-            const selectedVillaDiv = document.getElementById('selected-villa');
-            if (selectedVillaDiv) {
-                selectedVillaDiv.textContent = `Selected: ${villaNames[villaType]}`;
-            }
-            
-            updateSelectedItemsDisplay();
-            showMessage(`Selected ${villaNames[villaType]}`, 'success');
-            
-            console.log('Villa selected successfully:', villaType, villaNames[villaType]);
-        }
-
-        // Copy to Clipboard
-        function copyToClipboard() {
-            if (selectedAmenities.length === 0) {
-                showMessage('No items selected to copy!', 'error');
-                return;
-            }
-
-            const villaInfo = selectedVilla ? `${villaNames[selectedVilla]}\n\n` : '';
-            const textToCopy = villaInfo + selectedAmenities.join('\n');
-
-            // Try modern clipboard API first
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    showMessage('List copied to clipboard!', 'success');
-                }).catch(() => {
-                    fallbackCopyToClipboard(textToCopy);
+            const prefix = selectedVilla ? `${villaNames[selectedVilla]}\n\n` : '';
+            const structuredOrder = [];
+            Object.keys(AMENITIES_CATEGORIES).forEach(category => {
+                AMENITIES_CATEGORIES[category].forEach(item => {
+                    if (selectedAmenities.includes(item)) { structuredOrder.push(item); }
                 });
-            } else {
-                // Use fallback method
-                fallbackCopyToClipboard(textToCopy);
-            }
+            });
+
+            const itemsList = structuredOrder.join('\n');
+            const noteValue = document.getElementById('custom-notes-input').value.trim();
+            const suffix = noteValue ? `\n\nNote:\n${noteValue}` : '';
+            
+            const displayTextarea = document.getElementById('selected-items');
+            displayTextarea.value = prefix + itemsList + suffix;
+            displayTextarea.scrollTop = displayTextarea.scrollHeight;
+            
+            const hasContent = selectedAmenities.length > 0 || noteValue.length > 0;
+            const toggle = hasContent ? 'add' : 'remove';
+            document.getElementById('floating-copy').classList[toggle]('show'); 
+            document.getElementById('floating-whatsapp').classList[toggle]('show');
         }
 
-        function fallbackCopyToClipboard(text) {
-            const textArea = document.createElement('textarea');
-            textArea.value = text;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    showMessage('List copied to clipboard!', 'success');
-                } else {
-                    showMessage('Please select and copy the text manually', 'error');
-                }
-            } catch (err) {
-                showMessage('Please select and copy the text manually', 'error');
-            }
-
-            document.body.removeChild(textArea);
+        function updateAmenityButtons() {
+            document.querySelectorAll('.amenity-btn').forEach(b => { 
+                b.classList[selectedAmenities.includes(b.textContent) ? 'add' : 'remove']('selected'); 
+            });
         }
 
-        // Share to WhatsApp
-        function shareToWhatsApp() {
-            if (selectedAmenities.length === 0) {
-                showMessage('No items selected to share!', 'error');
-                return;
-            }
-
-            const villaInfo = selectedVilla ? `${villaNames[selectedVilla]}\n\n` : '';
-            const message = `${villaInfo}${selectedAmenities.join('\n')}`;
-            const encodedMessage = encodeURIComponent(message);
-            const whatsappURL = `https://wa.me/?text=${encodedMessage}`;
-
-            // Save to history
-            saveShareHistoryLocal(selectedVilla ? villaNames[selectedVilla] : '', selectedAmenities, 'WhatsApp');
-
-            window.open(whatsappURL, '_blank');
-            showMessage('Opening WhatsApp...', 'success');
+        function showMessage(txt, type) {
+            const old = document.querySelector('.message'); 
+            if (old) old.remove();
+            const m = document.createElement('div'); 
+            m.className = `message ${type}`; 
+            m.textContent = txt; 
+            document.body.appendChild(m);
+            void m.offsetWidth; 
+            m.classList.add('show');
+            setTimeout(() => { 
+                m.classList.remove('show'); 
+                setTimeout(() => m.remove(), 400); 
+            }, 1200);
         }
 
-        // Clear List
-        function clearList() {
-            if (selectedAmenities.length === 0) {
-                showMessage('No items to clear!', 'error');
-                return;
-            }
-
-            selectedAmenities = [];
-            updateSelectedItemsDisplay();
-            updateAmenityButtons();
-            updateFloatingButtons();
-            showMessage('List cleared!', 'success');
+        function copyToClipboard() { 
+            const textContent = document.getElementById('selected-items').value;
+            if (!textContent.trim()) return; 
+            navigator.clipboard.writeText(textContent).then(() => showMessage('📋 Copied!', 'success')); 
         }
-
-        // Show message
-        function showMessage(text, type) {
-            const existingMessage = document.querySelector('.message');
-            if (existingMessage) {
-                existingMessage.remove();
-            }
-
-            const message = document.createElement('div');
-            message.className = `message ${type}`;
-            message.textContent = text;
-            document.body.appendChild(message);
-
-            setTimeout(() => message.classList.add('show'), 100);
-            setTimeout(() => {
-                message.classList.remove('show');
-                setTimeout(() => message.remove(), 300);
-            }, 2000);
+        
+        function shareToWhatsApp() { 
+            const textContent = document.getElementById('selected-items').value;
+            if (!textContent.trim()) return; 
+            saveShareHistoryLocal(selectedVilla ? villaNames[selectedVilla] : '', selectedAmenities, 'WhatsApp'); 
+            window.open(`https://wa.me/?text=${encodeURIComponent(textContent)}`, '_blank'); 
         }
-
-        // Theme switching
-        function changeTheme(theme) {
-            document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelector(`.theme-btn.${theme}`).classList.add('active');
-
-            const root = document.documentElement;
-            switch(theme) {
-                case 'blue':
-                    root.style.setProperty('--primary-color', '#0066ff');
-                    break;
-                case 'purple':
-                    root.style.setProperty('--primary-color', '#cc00cc');
-                    break;
-                case 'orange':
-                    root.style.setProperty('--primary-color', '#ff6600');
-                    break;
-                default:
-                    root.style.setProperty('--primary-color', '#00cc00');
-            }
-
-            showMessage(`Theme changed to ${theme}`, 'success');
+        
+        function clearList() { 
+            if(selectedAmenities.length > 0 || document.getElementById('custom-notes-input').value.trim().length > 0) { 
+                selectedAmenities = []; 
+                document.getElementById('custom-notes-input').value = '';
+                updateSelectedItemsDisplay(); 
+                updateAmenityButtons(); 
+                showMessage('🗑️ Choices Cleared', 'error'); 
+            } 
         }
-
-        // Admin Panel Functions
-        let adminContentVisible = false;
-
-        function toggleAdmin() {
-            const adminPassword = document.getElementById('admin-password');
-            const adminContent = document.getElementById('admin-content');
-
+        
+        function toggleAdmin() { 
             if (!adminAuthenticated) {
-                if (adminPassword.classList.contains('show')) {
-                    adminPassword.classList.remove('show');
-                } else {
-                    adminPassword.classList.add('show');
-                }
+                document.getElementById('admin-password').classList.toggle('show');
             } else {
-                adminContent.classList.toggle('show');
-                if (adminContent.classList.contains('show')) {
-                    updateCategoriesView();
-                }
+                document.getElementById('admin-content').classList.toggle('show');
             }
         }
 
         function authenticateAdmin() {
-            const passwordInput = document.getElementById('admin-password-input');
-            const password = passwordInput.value;
-
-            if (password === '9999') {
-                adminAuthenticated = true;
-                isAdminMode = true;
+            const inp = document.getElementById('admin-password-input');
+            if (inp.value === '8888') {
+                adminAuthenticated = true; 
                 document.getElementById('admin-password').classList.remove('show');
-                document.getElementById('admin-content').classList.add('show');
+                document.getElementById('admin-content').classList.add('show'); 
                 document.getElementById('admin-nav').style.display = 'flex';
-
-                document.getElementById('admin-edit-section').style.display = 'block';
+                document.getElementById('admin-edit-section').style.display = 'block'; 
                 document.getElementById('admin-item-section').style.display = 'block';
-                document.getElementById('admin-only-functions').style.display = 'block';
-                document.getElementById('admin-login-prompt').style.display = 'none';
-
-                passwordInput.value = '';
-                updateCategoryManagement();
-                updateCategoriesView();
-                showAdminSection('manage'); // Show manage section by default
-                showMessage('Admin access granted!', 'success');
-            } else {
-                showMessage('Incorrect password!', 'error');
-                passwordInput.value = '';
+                document.getElementById('admin-only-functions').style.display = 'block'; 
+                inp.value = ''; 
+                updateCategoryManagement(); 
+                showAdminSection('manage');
+                showMessage('🔓 Unlocked', 'success');
+            } else { 
+                showMessage('❌ Incorrect Key', 'error'); 
             }
         }
 
         function logoutAdmin() {
-            adminAuthenticated = false;
-            isAdminMode = false;
+            adminAuthenticated = false; 
             document.getElementById('admin-content').classList.remove('show');
-            document.getElementById('admin-password').classList.remove('show');
-            document.getElementById('admin-nav').style.display = 'none';
-
+            document.getElementById('admin-nav').style.display = 'none'; 
             document.getElementById('admin-edit-section').style.display = 'none';
-            document.getElementById('admin-item-section').style.display = 'none';
+            document.getElementById('admin-item-section').style.display = 'none'; 
             document.getElementById('admin-only-functions').style.display = 'none';
-            document.getElementById('admin-login-prompt').style.display = 'block';
-
-            showMessage('Logged out from admin panel', 'success');
+            showMessage('🔒 Locked', 'error');
         }
 
-        function handlePasswordKeyPress(event) {
-            if (event.key === 'Enter') {
-                authenticateAdmin();
-            }
+        function handlePasswordKeyPress(e) { 
+            if (e.key === 'Enter') authenticateAdmin(); 
+        }
+        
+        function showAdminSection(sec) {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active')); 
+            document.getElementById(sec + '-btn').classList.add('active');
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
+            document.getElementById(sec + '-section').style.display = 'block';
+            if (sec === 'history') loadShareHistory();
+            if (sec === 'suggestions') renderAdminSuggestions();
         }
 
-        // Category Management Functions
+        function loadShareHistory() {
+            const data = localStorage.getItem(STORAGE_KEYS.SHARE_HISTORY) ? JSON.parse(localStorage.getItem(STORAGE_KEYS.SHARE_HISTORY)) : [];
+            document.getElementById('history-list').innerHTML = data.map(h => `
+                <div class="history-item">
+                    <div style="display:flex;justify-content:space-between;margin-bottom:3px;">
+                        <span style="font-weight:bold;color:#00ff00;">${h.platform}</span>
+                        <span style="font-size:10px;color:#888;">${new Date(h.shared_at).toLocaleTimeString()}</span>
+                    </div>
+                    ${h.villa_type ? `<div style="color:#00ccff;font-size:11px;">${h.villa_type}</div>` : ''}
+                    <div style="color:#eee;font-size:11px;">${h.amenities.join(', ')}</div>
+                </div>
+            `).join('') || '<p style="color:#888;text-align:center;padding:10px;">No transaction logs.</p>';
+        }
+
+        function saveShareHistoryLocal(villa, items, platform) {
+            try { 
+                const h = localStorage.getItem(STORAGE_KEYS.SHARE_HISTORY) ? JSON.parse(localStorage.getItem(STORAGE_KEYS.SHARE_HISTORY)) : [];
+                h.unshift({ villa_type: villa, amenities: items, platform: platform, shared_at: new Date().toISOString() });
+                localStorage.setItem(STORAGE_KEYS.SHARE_HISTORY, JSON.stringify(h.slice(0, 50))); 
+            } catch (e) {}
+        }
+        
+        function clearShareHistory() { 
+            if (confirm('Clear tracking log history?')) { 
+                localStorage.removeItem(STORAGE_KEYS.SHARE_HISTORY); 
+                loadShareHistory(); 
+                showMessage('Logs Cleared', 'error'); 
+            } 
+        }
+        
+        function refreshHistory() { 
+            loadShareHistory(); 
+            showMessage('History Updated', 'success'); 
+        }
+
         function updateCategoryManagement() {
-            updateCategoryList();
-            updateCategorySelect();
-            updateItemsList();
+            updateCategoriesView(); 
+            const list = document.getElementById('category-list'); 
+            list.innerHTML = '';
+            const sel = document.getElementById('category-select'); 
+            sel.innerHTML = '<option value="">Choose heading</option>';
+            const itemsList = document.getElementById('items-list'); 
+            itemsList.innerHTML = '';
+
+            Object.keys(AMENITIES_CATEGORIES).forEach(cat => {
+                const d = document.createElement('div'); 
+                d.className='category-item'; 
+                d.innerHTML=`<span>Header: <strong>${cat}</strong></span><button class="remove-btn" onclick="removeCategory('${cat}')">Delete</button>`;
+                list.appendChild(d);
+                const o = document.createElement('option'); 
+                o.value=cat; 
+                o.textContent=cat; 
+                sel.appendChild(o);
+                const wrap = document.createElement('div'); 
+                wrap.innerHTML=`<h5 style="color:#00cc00;margin:6px 0 3px 0;font-size:11px;">[ ${cat} ]</h5>`;
+                AMENITIES_CATEGORIES[cat].forEach(i => {
+                    const row = document.createElement('div'); 
+                    row.className='category-item'; 
+                    row.innerHTML=`<span style="font-size:11px;">${i}</span><button class="remove-btn" onclick="removeItemFromCategory('${cat}','${i}')">Remove</button>`;
+                    wrap.appendChild(row);
+                });
+                itemsList.appendChild(wrap);
+            });
         }
 
         function updateCategoriesView() {
-            const categoriesView = document.getElementById('categories-view');
-            categoriesView.innerHTML = '';
-
-            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'category-item';
-                categoryDiv.style.flexDirection = 'column';
-                categoryDiv.style.alignItems = 'flex-start';
-                categoryDiv.style.marginBottom = '10px';
-
-                const categoryHeader = document.createElement('div');
-                categoryHeader.style.fontWeight = 'bold';
-                categoryHeader.style.color = '#00cc00';
-                categoryHeader.style.marginBottom = '5px';
-                categoryHeader.textContent = `${categoryName} (${AMENITIES_CATEGORIES[categoryName].length} items)`;
-
-                const itemsList = document.createElement('div');
-                itemsList.style.fontSize = '12px';
-                itemsList.style.color = '#aaaaaa';
-                itemsList.style.marginLeft = '10px';
-                itemsList.textContent = AMENITIES_CATEGORIES[categoryName].join(', ');
-
-                categoryDiv.appendChild(categoryHeader);
-                categoryDiv.appendChild(itemsList);
-                categoriesView.appendChild(categoryDiv);
-            });
-        }
-
-        function updateCategoryList() {
-            const categoryList = document.getElementById('category-list');
-            categoryList.innerHTML = '';
-
-            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.className = 'category-item';
-                categoryDiv.innerHTML = `
-                    <span>${categoryName} (${AMENITIES_CATEGORIES[categoryName].length} items)</span>
-                    <button class="remove-btn" onclick="removeCategory('${categoryName}')">Remove</button>
-                `;
-                categoryList.appendChild(categoryDiv);
-            });
-        }
-
-        function updateCategorySelect() {
-            const categorySelect = document.getElementById('category-select');
-            categorySelect.innerHTML = '<option value="">Select category for new item</option>';
-
-            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
-                const option = document.createElement('option');
-                option.value = categoryName;
-                option.textContent = categoryName;
-                categorySelect.appendChild(option);
-            });
-        }
-
-        function updateItemsList() {
-            const itemsList = document.getElementById('items-list');
-            itemsList.innerHTML = '';
-
-            Object.keys(AMENITIES_CATEGORIES).forEach(categoryName => {
-                const categoryDiv = document.createElement('div');
-                categoryDiv.innerHTML = `<h5 style="color: #00cc00; margin: 10px 0 5px 0;">${categoryName}</h5>`;
-
-                AMENITIES_CATEGORIES[categoryName].forEach(item => {
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = 'category-item';
-                    itemDiv.innerHTML = `
-                        <span style="font-size: 12px;">${item}</span>
-                        <button class="remove-btn" onclick="removeItemFromCategory('${categoryName}', '${item}')">Remove</button>
-                    `;
-                    categoryDiv.appendChild(itemDiv);
-                });
-
-                itemsList.appendChild(categoryDiv);
+            const view = document.getElementById('categories-view'); 
+            view.innerHTML = '';
+            if (Object.keys(AMENITIES_CATEGORIES).length === 0) { 
+                view.innerHTML = '<div style="color:#666;font-style:italic;font-size:11px;padding:3px;">No category tracks.</div>'; 
+                return; 
+            }
+            Object.keys(AMENITIES_CATEGORIES).forEach(cat => {
+                const d = document.createElement('div'); 
+                d.className='category-item'; 
+                d.style.flexDirection='column'; 
+                d.style.alignItems='flex-start';
+                d.innerHTML=`<div style="font-weight:bold;color:#00cc00;">Header: ${cat}</div><div style="font-size:11px;color:#aaa;">Items: ${AMENITIES_CATEGORIES[cat].join(', ') || 'None'}</div>`;
+                view.appendChild(d);
             });
         }
 
         function addNewCategory() {
-            const newCategoryInput = document.getElementById('new-category');
-            const categoryName = newCategoryInput.value.trim();
-
-            if (!categoryName) {
-                showMessage('Please enter a category name', 'error');
-                return;
-            }
-
-            if (AMENITIES_CATEGORIES.hasOwnProperty(categoryName)) {
-                showMessage('Category already exists', 'error');
-                return;
-            }
-
-            AMENITIES_CATEGORIES[categoryName] = [];
-            updateAmenitiesArray();
-            saveAmenitiesConfig(); // Auto-save configuration
-            renderAmenities();
-            updateCategoryManagement();
-            updateCategoriesView();
-            newCategoryInput.value = '';
-            showMessage(`Added category: ${categoryName}`, 'success');
-        }
-
-        function removeCategory(categoryName) {
-            if (confirm(`Are you sure you want to remove the "${categoryName}" category and all its items?`)) {
-                delete AMENITIES_CATEGORIES[categoryName];
-                updateAmenitiesArray();
-                saveAmenitiesConfig(); // Auto-save configuration
-                renderAmenities();
-                updateCategoryManagement();
-                updateCategoriesView();
-                showMessage(`Removed category: ${categoryName}`, 'success');
+            const el = document.getElementById('new-category'); 
+            const v = el.value.trim();
+            if (v && !AMENITIES_CATEGORIES.hasOwnProperty(v)) { 
+                AMENITIES_CATEGORIES[v] = []; 
+                saveAndReload(); 
+                el.value=''; 
+                showMessage(`Header [${v}] Created`, 'success'); 
             }
         }
-
+        
+        function removeCategory(cat) { 
+            if (confirm(`Remove column heading "${cat}"?`)) { 
+                delete AMENITIES_CATEGORIES[cat]; 
+                saveAndReload(); 
+                showMessage(`Deleted branch`, 'error'); 
+            } 
+        }
+        
         function addItemToCategory() {
-            const categorySelect = document.getElementById('category-select');
-            const newItemInput = document.getElementById('new-item');
-            const selectedCategory = categorySelect.value;
-            const newItem = newItemInput.value.trim();
-
-            if (!selectedCategory) {
-                showMessage('Please select a category', 'error');
-                return;
+            const cat = document.getElementById('category-select').value; 
+            const el = document.getElementById('new-item'); 
+            const v = el.value.trim();
+            if (cat && v && !AMENITIES_CATEGORIES[cat].includes(v)) { 
+                AMENITIES_CATEGORIES[cat].push(v); 
+                saveAndReload(); 
+                el.value=''; 
+                showMessage(`Element injected`, 'success'); 
             }
-
-            if (!newItem) {
-                showMessage('Please enter an item name', 'error');
-                return;
-            }
-
-            if (AMENITIES_CATEGORIES[selectedCategory].includes(newItem)) {
-                showMessage('Item already exists in this category', 'error');
-                return;
-            }
-
-            AMENITIES_CATEGORIES[selectedCategory].push(newItem);
-            updateAmenitiesArray();
-            saveAmenitiesConfig(); // Auto-save configuration
-            renderAmenities();
-            updateCategoryManagement();
-            updateCategoriesView();
-            newItemInput.value = '';
-            showMessage(`Added "${newItem}" to ${selectedCategory}`, 'success');
         }
-
+        
         function addBulkItemsToCategory() {
-            const categorySelect = document.getElementById('category-select');
-            const bulkItemsInput = document.getElementById('bulk-items');
-            const selectedCategory = categorySelect.value;
-            const bulkText = bulkItemsInput.value.trim();
-
-            if (!selectedCategory) {
-                showMessage('Please select a category', 'error');
-                return;
-            }
-
-            if (!bulkText) {
-                showMessage('Please enter items to add (one per line)', 'error');
-                return;
-            }
-
-            const newItems = bulkText.split('\n')
-                .map(item => item.trim())
-                .filter(item => item.length > 0);
-
-            if (newItems.length === 0) {
-                showMessage('No valid items found to add', 'error');
-                return;
-            }
-
-            let addedCount = 0;
-            let skippedCount = 0;
-            const skippedItems = [];
-
-            newItems.forEach(item => {
-                if (AMENITIES_CATEGORIES[selectedCategory].includes(item)) {
-                    skippedCount++;
-                    skippedItems.push(item);
-                } else {
-                    AMENITIES_CATEGORIES[selectedCategory].push(item);
-                    addedCount++;
-                }
-            });
-
-            updateAmenitiesArray();
-            saveAmenitiesConfig(); // Auto-save configuration
-            renderAmenities();
-            updateCategoryManagement();
-            updateCategoriesView();
-            bulkItemsInput.value = '';
-
-            let message = `Added ${addedCount} items to ${selectedCategory}`;
-            if (skippedCount > 0) {
-                message += ` (${skippedCount} duplicates skipped)`;
-            }
-            showMessage(message, 'success');
-
-            if (skippedItems.length > 0 && skippedItems.length <= 3) {
-                setTimeout(() => {
-                    showMessage(`Skipped duplicates: ${skippedItems.join(', ')}`, 'error');
-                }, 2500);
-            }
-        }
-
-        function removeItemFromCategory(categoryName, item) {
-            if (confirm(`Remove "${item}" from ${categoryName}?`)) {
-                const index = AMENITIES_CATEGORIES[categoryName].indexOf(item);
-                if (index > -1) {
-                    AMENITIES_CATEGORIES[categoryName].splice(index, 1);
-
-                    // Also remove from selected items if it was selected
-                    const selectedIndex = selectedAmenities.indexOf(item);
-                    if (selectedIndex > -1) {
-                        selectedAmenities.splice(selectedIndex, 1);
-                        updateSelectedItemsDisplay();
-                    }
-
-                    updateAmenitiesArray();
-                    saveAmenitiesConfig(); // Auto-save configuration
-                    renderAmenities();
-                    updateCategoryManagement();
-                    updateCategoriesView();
-                    showMessage(`Removed "${item}" from ${categoryName}`, 'success');
-                }
-            }
-        }
-
-        function exportAmenities() {
-            const amenitiesText = AMENITIES.join('\n');
-            const blob = new Blob([amenitiesText], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'amenities_list.txt';
-            a.click();
-            URL.revokeObjectURL(url);
-            showMessage('Amenities list exported!', 'success');
-        }
-
-        function importAmenities() {
-            const importText = document.getElementById('import-amenities').value.trim();
-
-            if (!importText) {
-                showMessage('Please paste amenities list to import', 'error');
-                return;
-            }
-
-            const newAmenities = importText.split('\n').map(item => item.trim()).filter(item => item);
-
-            if (newAmenities.length === 0) {
-                showMessage('No valid amenities found to import', 'error');
-                return;
-            }
-
-            // Add to "General Items" category
-            if (!AMENITIES_CATEGORIES['General Items']) {
-                AMENITIES_CATEGORIES['General Items'] = [];
-            }
-
-            let addedCount = 0;
-            newAmenities.forEach(amenity => {
-                let alreadyExists = false;
-                Object.values(AMENITIES_CATEGORIES).forEach(categoryItems => {
-                    if (categoryItems.includes(amenity)) {
-                        alreadyExists = true;
-                    }
+            const cat = document.getElementById('category-select').value; 
+            const el = document.getElementById('bulk-items');
+            if (cat && el.value.trim()) {
+                let count = 0; 
+                el.value.split('\n').map(i=>i.trim()).filter(i=>i.length>0).forEach(i => { 
+                    if(!AMENITIES_CATEGORIES[cat].includes(i)) { 
+                        AMENITIES_CATEGORIES[cat].push(i); 
+                        count++; 
+                    } 
                 });
-
-                if (!alreadyExists) {
-                    AMENITIES_CATEGORIES['General Items'].push(amenity);
-                    addedCount++;
-                }
-            });
-
-            updateAmenitiesArray();
-            saveAmenitiesConfig(); // Auto-save configuration
-            renderAmenities();
-            updateCategoryManagement();
-            updateCategoriesView();
-            document.getElementById('import-amenities').value = '';
-            showMessage(`Imported ${addedCount} new amenities`, 'success');
+                saveAndReload(); 
+                el.value=''; 
+                showMessage(`Added ${count} items`, 'success');
+            }
+        }
+        
+        function removeItemFromCategory(cat, item) {
+            const idx = AMENITIES_CATEGORIES[cat].indexOf(item);
+            if (idx > -1) { 
+                AMENITIES_CATEGORIES[cat].splice(idx, 1); 
+                if (selectedAmenities.includes(item)) selectedAmenities.splice(selectedAmenities.indexOf(item),1); 
+                saveAndReload(); 
+                updateSelectedItemsDisplay(); 
+                showMessage(`Element removed`, 'error'); 
+            }
         }
 
-        function resetAmenities() {
-            if (confirm('Are you sure you want to reset to default amenities? This will remove all custom additions.')) {
-                AMENITIES_CATEGORIES = JSON.parse(JSON.stringify(DEFAULT_CATEGORIES));
-                updateAmenitiesArray();
-                saveAmenitiesConfig(); // Auto-save configuration
-                renderAmenities();
-                updateCategoryManagement();
-                updateCategoriesView();
-                showMessage('Reset to default amenities', 'success');
+        function saveAndReload() { 
+            updateAmenitiesArray(); 
+            renderAmenities(); 
+            updateCategoryManagement(); 
+            localStorage.setItem(STORAGE_KEYS.MATRIX_CACHE, JSON.stringify(AMENITIES_CATEGORIES));
+            
+            if (WEB_APP_URL) {
+                fetch(WEB_APP_URL, {
+                    method: "POST",
+                    mode: "no-cors", 
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(AMENITIES_CATEGORIES)
+                })
+                .then(() => {
+                    showMessage('🚀 Cloud Synced!', 'success');
+                    document.getElementById('search-input').placeholder = "Search items...";
+                })
+                .catch((err) => { console.error(err); showMessage('Network Error', 'error'); });
             }
+        }
+        
+        function exportAmenities() {
+            const blob = new Blob([JSON.stringify(AMENITIES_CATEGORIES, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a'); 
+            a.href = URL.createObjectURL(blob); 
+            a.download = 'horizontal_amenities_config.json'; 
+            a.click();
+        }
+        
+        function importAmenities() {
+            try { 
+                const parsed = JSON.parse(document.getElementById('import-amenities').value.trim());
+                if (parsed && typeof parsed === 'object') { 
+                    AMENITIES_CATEGORIES = parsed; 
+                    saveAndReload(); 
+                    document.getElementById('import-amenities').value=''; 
+                    showMessage('Matrix map restored!', 'success'); 
+                }
+            } catch (e) { 
+                showMessage('Invalid JSON configuration layout!', 'error'); 
+            }
+        }
+        
+        function resetAmenities() { 
+            if(confirm('Wipe complete structure data?')) { 
+                AMENITIES_CATEGORIES={}; 
+                selectedAmenities=[]; 
+                localStorage.removeItem(STORAGE_KEYS.MATRIX_CACHE); 
+                updateSelectedItemsDisplay(); 
+                saveAndReload(); 
+            } 
         }
     </script>
 </body>
