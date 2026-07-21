@@ -350,15 +350,15 @@
     <div class="header">
         <div class="logo">🏝️ OBLU SELECT Sangeli</div>
         <div class="subtitle">Horizontal Matrix Sheet System</div>
-        <div class="version-badge">v4.0.1 | 2026-07-20</div>
+        <div class="version-badge">v4.0.4 | 2026-07-21</div>
         
         <!-- ============================================
         HEADER ACTIONS WITH DROPDOWN
         ============================================ -->
         <div class="header-actions">
             <!-- Install Button -->
-            <button id="universal-install-btn" style="display:none; background: #00cc00; color: #0a0a0a; border: none; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 11px; cursor: pointer; box-shadow: 0 0 10px rgba(0,204,0,0.6);">
-                📥 Install
+            <button id="universal-install-btn" style="display:inline-block; background: #00cc00; color: #0a0a0a; border: none; padding: 6px 14px; border-radius: 20px; font-weight: bold; font-size: 11px; cursor: pointer; box-shadow: 0 0 10px rgba(0,204,0,0.6);">
+                📥 Install App
             </button>
             
             <!-- Dropdown Container -->
@@ -563,9 +563,9 @@
         // ============================================
         // APP VERSION - UPDATE ON EVERY RELEASE
         // ============================================
-        const APP_VERSION = 'v4.0.1';
-        const BUILD_DATE = '2026-07-20';
-        const BUILD_TIME = '14:30';
+        const APP_VERSION = 'v4.0.4';
+        const BUILD_DATE = '2026-07-21';
+        const BUILD_TIME = '16:00';
 
         // ============================================
         // FORCE UPDATE - Clears cache if version changed
@@ -634,6 +634,64 @@
         })();
 
         // ============================================
+        // PWA INSTALL - FIXED
+        // ============================================
+        let deferredPrompt = null;
+        const installBtn = document.getElementById('universal-install-btn');
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+
+        // Hide install button if already installed
+        if (isStandalone) {
+            installBtn.style.display = 'none';
+            console.log('✅ App is already installed (standalone mode)');
+        }
+
+        // iOS - show install instructions
+        if (isIOS && !isStandalone) {
+            installBtn.textContent = '📱 Add to Home Screen';
+            installBtn.onclick = function() {
+                alert("🍏 To install on iPhone / iOS:\n1. Tap the Safari 'Share' button (square icon with an up arrow at the bottom menu).\n2. Scroll down the panel and select 'Add to Home Screen'.");
+            };
+            console.log('📱 iOS device detected - showing Add to Home Screen button');
+        }
+
+        // Android - beforeinstallprompt event
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'inline-block';
+            installBtn.textContent = '📥 Install App';
+            installBtn.onclick = handleInstallClick;
+            console.log('📥 Install prompt available');
+        });
+
+        // App installed event
+        window.addEventListener('appinstalled', () => {
+            deferredPrompt = null;
+            installBtn.style.display = 'none';
+            showMessage("🎉 App Installed Successfully!", "success");
+            console.log('🎉 App installed successfully');
+        });
+
+        // Handle install click
+        async function handleInstallClick() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                if (outcome === 'accepted') {
+                    installBtn.style.display = 'none';
+                    showMessage("🎉 App Installed!", "success");
+                } else {
+                    showMessage("Installation cancelled", "error");
+                }
+            } else {
+                showMessage("Use browser menu to install", "success");
+            }
+        }
+
+        // ============================================
         // DROPDOWN FUNCTIONS
         // ============================================
         function toggleDropdown(event) {
@@ -659,7 +717,6 @@
         // ============================================
         function clearCache() {
             if (confirm('🧹 Clear app cache?\n\nThis will remove cached files and force a fresh load.')) {
-                // Clear service worker caches
                 if ('caches' in window) {
                     caches.keys().then(function(names) {
                         names.forEach(function(name) {
@@ -684,10 +741,8 @@
 
         function clearAllData() {
             if (confirm('🧹 Clear ALL app data?\n\nThis will remove:\n- All selections\n- All notes\n- Suggestions\n- History\n- Cache\n\nThis cannot be undone!')) {
-                // Clear localStorage
                 localStorage.clear();
                 
-                // Clear caches
                 if ('caches' in window) {
                     caches.keys().then(function(names) {
                         names.forEach(function(name) {
@@ -710,7 +765,6 @@
 
         function resetToDefault() {
             if (confirm('🔄 Reset to default settings?\n\nThis will restore default suggestions and clear your selections.')) {
-                // Reset suggestions to default
                 const defaultSuggestions = [
                     'Pantry out of stock',
                     'Item not available in pantry',
@@ -722,7 +776,6 @@
                 ];
                 localStorage.setItem('oblu_note_suggestions', JSON.stringify(defaultSuggestions));
                 
-                // Clear selections
                 localStorage.removeItem('oblu_matrix_cache');
                 localStorage.removeItem('oblu_selected_items');
                 localStorage.removeItem('oblu_selected_villa');
@@ -744,7 +797,6 @@
             
             const modal = document.getElementById('uninstallModal');
             
-            // Detect device
             const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
             const isAndroid = /Android/.test(navigator.userAgent);
             
@@ -760,7 +812,6 @@
         }
 
         function confirmUninstall() {
-            // Unregister service workers
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.getRegistrations().then(function(registrations) {
                     registrations.forEach(function(registration) {
@@ -770,10 +821,8 @@
                 });
             }
             
-            // Clear all data
             localStorage.clear();
             
-            // Clear caches
             if ('caches' in window) {
                 caches.keys().then(function(names) {
                     names.forEach(function(name) {
@@ -812,7 +861,6 @@
         let currentCategoryFilter = 'all'; 
         let searchTimeout = null;
         let noteSuggestions = [];
-        let deferredPrompt = null;
         
         const villaNames = { 
             'water-villa-1st': 'Water Villa 1st Pantry', 
@@ -824,132 +872,14 @@
         document.addEventListener('DOMContentLoaded', function() { 
             loadInitialData(); 
             initializeUI(); 
-            initServiceWorkerAndPWA();
+            initServiceWorker();
             loadNoteSuggestions();
         });
 
         // ============================================
-        // NOTE SUGGESTIONS
+        // SERVICE WORKER
         // ============================================
-        function loadNoteSuggestions() {
-            const saved = localStorage.getItem(STORAGE_KEYS.NOTE_SUGGESTIONS);
-            if (saved) {
-                try {
-                    noteSuggestions = JSON.parse(saved);
-                } catch(e) {
-                    noteSuggestions = [];
-                }
-            }
-            
-            if (noteSuggestions.length === 0) {
-                noteSuggestions = [
-                    'Pantry out of stock',
-                    'Item not available in pantry',
-                    'Running low on supplies',
-                    'Need urgent restock',
-                    'Limited quantity available',
-                    'Out of stock - please replenish',
-                    'Insufficient stock for today'
-                ];
-                saveNoteSuggestions();
-            }
-            
-            renderSuggestions();
-        }
-
-        function saveNoteSuggestions() {
-            localStorage.setItem(STORAGE_KEYS.NOTE_SUGGESTIONS, JSON.stringify(noteSuggestions));
-        }
-
-        function renderSuggestions() {
-            const container = document.getElementById('suggestions-container');
-            container.innerHTML = '';
-            
-            noteSuggestions.forEach((suggestion, index) => {
-                const chip = document.createElement('div');
-                chip.className = 'suggestion-chip';
-                chip.innerHTML = `
-                    ${suggestion}
-                    <span class="remove-chip" onclick="event.stopPropagation();removeSuggestion(${index})">×</span>
-                `;
-                chip.onclick = () => applySuggestion(suggestion);
-                container.appendChild(chip);
-            });
-        }
-
-        function applySuggestion(text) {
-            const input = document.getElementById('custom-notes-input');
-            const current = input.value.trim();
-            if (current) {
-                input.value = current + '\n' + text;
-            } else {
-                input.value = text;
-            }
-            input.dispatchEvent(new Event('input'));
-            showMessage('💡 Note added!', 'success');
-        }
-
-        function addSuggestion() {
-            const input = document.getElementById('new-suggestion-input');
-            const text = input.value.trim();
-            if (!text) {
-                showMessage('Please enter a suggestion', 'error');
-                return;
-            }
-            if (noteSuggestions.includes(text)) {
-                showMessage('Suggestion already exists', 'error');
-                return;
-            }
-            noteSuggestions.push(text);
-            saveNoteSuggestions();
-            renderSuggestions();
-            input.value = '';
-            if (adminAuthenticated) renderAdminSuggestions();
-            showMessage('✅ Suggestion added!', 'success');
-        }
-
-        function removeSuggestion(index) {
-            noteSuggestions.splice(index, 1);
-            saveNoteSuggestions();
-            renderSuggestions();
-            if (adminAuthenticated) renderAdminSuggestions();
-            showMessage('🗑️ Suggestion removed', 'error');
-        }
-
-        function handleSuggestionKeyPress(e) {
-            if (e.key === 'Enter') addSuggestion();
-        }
-
-        function renderAdminSuggestions() {
-            const container = document.getElementById('admin-suggestions-list');
-            container.innerHTML = '';
-            
-            if (noteSuggestions.length === 0) {
-                container.innerHTML = '<div style="color:#666;font-size:12px;padding:8px;">No suggestions available</div>';
-                return;
-            }
-            
-            noteSuggestions.forEach((suggestion, index) => {
-                const item = document.createElement('div');
-                item.className = 'category-item';
-                item.innerHTML = `
-                    <span style="font-size:12px;">${suggestion}</span>
-                    <div>
-                        <button class="remove-btn" onclick="removeSuggestion(${index})">✕</button>
-                    </div>
-                `;
-                container.appendChild(item);
-            });
-        }
-
-        // ============================================
-        // PWA INSTALL
-        // ============================================
-        const installBtn = document.getElementById('universal-install-btn');
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone;
-
-        function initServiceWorkerAndPWA() {
+        function initServiceWorker() {
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('/Hk_amenities_v3/sw.js?v=' + APP_VERSION)
                     .then(reg => {
@@ -989,45 +919,181 @@
                     }
                 });
             }
-            
-            if (isIOS && !isStandalone) {
-                installBtn.style.display = 'inline-block';
-                installBtn.textContent = '📱 Add to Home Screen';
-                installBtn.onclick = function() {
-                    alert("🍏 To install on iPhone / iOS:\n1. Tap the Safari 'Share' button (square icon with an up arrow at the bottom menu).\n2. Scroll down the panel and select 'Add to Home Screen'.");
-                };
-            } else if (!isStandalone) {
-                installBtn.style.display = 'inline-block';
-            }
         }
 
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            installBtn.style.display = 'inline-block';
-            installBtn.textContent = '📥 Install';
-            installBtn.onclick = handleInstallClick;
-        });
-
-        async function handleInstallClick() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                deferredPrompt = null;
-                if (outcome === 'accepted') {
-                    installBtn.style.display = 'none';
-                    showMessage("🎉 App Installed!", "success");
+        // ============================================
+        // NOTE SUGGESTIONS - FIXED PERSISTENCE
+        // ============================================
+        function loadNoteSuggestions() {
+            console.log('📝 Loading suggestions...');
+            const saved = localStorage.getItem(STORAGE_KEYS.NOTE_SUGGESTIONS);
+            
+            if (saved !== null && saved !== undefined) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed)) {
+                        noteSuggestions = parsed;
+                        console.log('✅ Loaded suggestions from localStorage:', noteSuggestions.length, 'items');
+                        
+                        if (noteSuggestions.length === 0) {
+                            console.log('📝 Suggestions are empty - user removed all');
+                        }
+                    } else {
+                        console.log('⚠️ Saved data is not an array, loading defaults');
+                        setDefaultSuggestions();
+                    }
+                } catch(e) {
+                    console.error('❌ Failed to parse suggestions:', e);
+                    setDefaultSuggestions();
                 }
             } else {
-                showMessage("Use browser menu to install", "success");
+                console.log('ℹ️ No saved suggestions found, loading defaults');
+                setDefaultSuggestions();
+            }
+            
+            renderSuggestions();
+        }
+
+        function setDefaultSuggestions() {
+            noteSuggestions = [
+                'Pantry out of stock',
+                'Item not available in pantry',
+                'Running low on supplies',
+                'Need urgent restock',
+                'Limited quantity available',
+                'Out of stock - please replenish',
+                'Insufficient stock for today'
+            ];
+            saveNoteSuggestions();
+            console.log('📝 Default suggestions loaded');
+        }
+
+        function saveNoteSuggestions() {
+            try {
+                localStorage.setItem(STORAGE_KEYS.NOTE_SUGGESTIONS, JSON.stringify(noteSuggestions));
+                console.log('💾 Suggestions saved:', noteSuggestions.length, 'items');
+            } catch(e) {
+                console.error('❌ Failed to save suggestions:', e);
             }
         }
 
-        window.addEventListener('appinstalled', () => {
-            deferredPrompt = null;
-            installBtn.style.display = 'none';
-            showMessage("🎉 App Installed!", "success");
-        });
+        function renderSuggestions() {
+            const container = document.getElementById('suggestions-container');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (!noteSuggestions || noteSuggestions.length === 0) {
+                console.log('ℹ️ No suggestions to render');
+                const emptyMsg = document.createElement('div');
+                emptyMsg.style.cssText = `
+                    color: #444444;
+                    font-size: 11px;
+                    padding: 6px;
+                    width: 100%;
+                    text-align: center;
+                    font-style: italic;
+                `;
+                emptyMsg.textContent = 'No suggestions. Add one below ➔';
+                container.appendChild(emptyMsg);
+                return;
+            }
+            
+            noteSuggestions.forEach((suggestion, index) => {
+                const chip = document.createElement('div');
+                chip.className = 'suggestion-chip';
+                chip.innerHTML = `
+                    ${suggestion}
+                    <span class="remove-chip" onclick="event.stopPropagation();removeSuggestion(${index})">×</span>
+                `;
+                chip.onclick = () => applySuggestion(suggestion);
+                container.appendChild(chip);
+            });
+            
+            console.log('🎨 Rendered', noteSuggestions.length, 'suggestions');
+        }
+
+        function applySuggestion(text) {
+            const input = document.getElementById('custom-notes-input');
+            if (!input) return;
+            
+            const current = input.value.trim();
+            if (current) {
+                input.value = current + '\n' + text;
+            } else {
+                input.value = text;
+            }
+            input.dispatchEvent(new Event('input'));
+            showMessage('💡 Note added!', 'success');
+        }
+
+        function addSuggestion() {
+            const input = document.getElementById('new-suggestion-input');
+            if (!input) return;
+            
+            const text = input.value.trim();
+            if (!text) {
+                showMessage('Please enter a suggestion', 'error');
+                return;
+            }
+            if (noteSuggestions.includes(text)) {
+                showMessage('Suggestion already exists', 'error');
+                return;
+            }
+            
+            noteSuggestions.push(text);
+            saveNoteSuggestions();
+            renderSuggestions();
+            input.value = '';
+            if (adminAuthenticated) renderAdminSuggestions();
+            showMessage('✅ Suggestion added!', 'success');
+        }
+
+        function removeSuggestion(index) {
+            if (index < 0 || index >= noteSuggestions.length) {
+                console.error('❌ Invalid suggestion index:', index);
+                return;
+            }
+            
+            const removed = noteSuggestions[index];
+            noteSuggestions.splice(index, 1);
+            saveNoteSuggestions();
+            renderSuggestions();
+            if (adminAuthenticated) renderAdminSuggestions();
+            showMessage(`🗑️ Removed: "${removed}"`, 'error');
+            console.log('🗑️ Suggestion removed, remaining:', noteSuggestions.length);
+        }
+
+        function handleSuggestionKeyPress(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addSuggestion();
+            }
+        }
+
+        function renderAdminSuggestions() {
+            const container = document.getElementById('admin-suggestions-list');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (!noteSuggestions || noteSuggestions.length === 0) {
+                container.innerHTML = '<div style="color:#666;font-size:12px;padding:8px;">No suggestions available. Add some above.</div>';
+                return;
+            }
+            
+            noteSuggestions.forEach((suggestion, index) => {
+                const item = document.createElement('div');
+                item.className = 'category-item';
+                item.innerHTML = `
+                    <span style="font-size:12px;">${suggestion}</span>
+                    <div>
+                        <button class="remove-btn" onclick="removeSuggestion(${index})">✕</button>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
 
         // ============================================
         // ORIGINAL APP FUNCTIONS (PRESERVED)
